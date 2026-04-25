@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Reports - POS System</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        .report-preview {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-lg);
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--color-primary);
+        }
+        .report-header h1 {
+            color: var(--color-primary);
+            font-size: 28px;
+            margin-bottom: var(--spacing-sm);
+        }
+        .report-header h2 {
+            font-size: 20px;
+            margin-bottom: var(--spacing-xs);
+        }
+        .report-header .report-meta {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+            border-radius: var(--radius-md);
+            color: white;
+        }
+        .report-summary-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(10px);
+        }
+        .report-summary-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+        }
+        .report-summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .date-range-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        @media (max-width: 768px) {
+            .date-range-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            <div class="content-wrapper">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="file-text"></i>Generate Reports</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div class="date-range-selector">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i data-lucide="calendar" class="label-icon"></i>
+                                    Start Date
+                                </label>
+                                <input type="date" id="startDate" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i data-lucide="calendar" class="label-icon"></i>
+                                    End Date
+                                </label>
+                                <input type="date" id="endDate" class="form-input">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-lg);">
+                            <div class="report-card">
+                                <div class="report-icon"><i data-lucide="shopping-cart"></i></div>
+                                <h3 class="report-title">Sales Report</h3>
+                                <p class="report-description">Detailed sales transactions and revenue analysis</p>
+                                <button class="action-btn" onclick="previewSalesReport()">
+                                    <i data-lucide="eye"></i>Preview Report
+                                </button>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-icon"><i data-lucide="receipt"></i></div>
+                                <h3 class="report-title">Expense Report</h3>
+                                <p class="report-description">Comprehensive expense tracking and analysis</p>
+                                <button class="action-btn" onclick="previewExpenseReport()">
+                                    <i data-lucide="eye"></i>Preview Report
+                                </button>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-icon"><i data-lucide="package"></i></div>
+                                <h3 class="report-title">Inventory Report</h3>
+                                <p class="report-description">Current inventory status and valuation</p>
+                                <button class="action-btn" onclick="previewInventoryReport()">
+                                    <i data-lucide="eye"></i>Preview Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Report Preview Section -->
+                <div id="reportPreviewSection" style="display: none;">
+                    <div class="content-card" style="margin-top: var(--spacing-xl);">
+                        <div class="content-card-header">
+                            <h2 class="content-card-title">
+                                <i data-lucide="file-text"></i>
+                                <span id="previewTitle">Report Preview</span>
+                            </h2>
+                            <button class="action-btn" onclick="downloadCurrentReport()">
+                                <i data-lucide="download"></i>Download PDF
+                            </button>
+                        </div>
+                        <div class="content-card-body">
+                            <div id="reportPreviewContent" class="report-preview"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        if (!AppData.user || !isLoggedIn()) window.location.href = '../index.html';
+        
+        // Use global report variables from main.js
+        
+        // Initialize dates
+        function initializeDates() {
+            const today = new Date();
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            document.getElementById('startDate').valueAsDate = firstDayOfMonth;
+            document.getElementById('endDate').valueAsDate = today;
+        }
+        
+        function getDateRange() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            return { start: start ? new Date(start) : null, end: end ? new Date(end + 'T23:59:59') : null };
+        }
+        
+        function filterByDateRange(items, dateField = 'date') {
+            const { start, end } = getDateRange();
+            if (!start && !end) return items;
+            
+            return items.filter(item => {
+                const itemDate = new Date(item[dateField]);
+                if (start && itemDate < start) return false;
+                if (end && itemDate > end) return false;
+                return true;
+            });
+        }
+        
+        function previewSalesReport() {
+            currentReportType = 'sales';
+            const sales = filterByDateRange(AppData.sales);
+            currentReportData = sales;
+            
+            const totalSales = sales.reduce((sum, s) => sum + s.total, 0);
+            const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
+            const totalItems = sales.reduce((sum, s) => sum + s.items.reduce((is, i) => is + i.quantity, 0), 0);
+            
+            const { start, end } = getDateRange();
+            const periodText = start && end ? 
+                `${start.toLocaleDateString()} - ${end.toLocaleDateString()}` : 
+                'All Time';
+            
+            console.log('✅ Sales report preview generated successfully');
+            
+            const preview = `
+                <div class="report-header">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <img src="../IDZ-logo.png" alt="Logo" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <h1>${AppData.settings.businessName}</h1>
+                    <h2>Sales Report</h2>
+                    <div class="report-meta">
+                        <div>Period: ${periodText}</div>
+                        <div>Generated: ${new Date().toLocaleString()}</div>
+                    </div>
+                </div>
+                
+                <div class="report-summary">
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Total Sales</div>
+                        <div class="report-summary-value">${formatCurrency(totalSales)}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Total Profit</div>
+                        <div class="report-summary-value">${formatCurrency(totalProfit)}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Transactions</div>
+                        <div class="report-summary-value">${sales.length}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Items Sold</div>
+                        <div class="report-summary-value">${totalItems}</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Sold By</th>
+                                <th>Payment</th>
+                                <th>Total</th>
+                                <th>Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sales.flatMap(sale => 
+                                sale.items.map((item, idx) => {
+                                    const itemProfit = (item.price - item.buyingPrice) * item.quantity;
+                                    const profitColor = itemProfit >= 0 ? 'var(--color-success)' : 'var(--color-danger)';
+                                    
+                                    return `
+                                    <tr>
+                                        <td>${new Date(sale.date).toLocaleString()}</td>
+                                        <td style="font-weight: 600;">${item.name}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>${idx === 0 ? (sale.soldBy || 'Unknown') : ''}</td>
+                                        <td>${idx === 0 ? (sale.paymentMethod || 'Cash') : ''}</td>
+                                        <td style="color: var(--color-success); font-weight: 600;">${formatCurrency(item.price * item.quantity)}</td>
+                                        <td style="color: ${profitColor}; font-weight: 600;">${formatCurrency(itemProfit)}</td>
+                                    </tr>
+                                `;
+                                })
+                            ).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            showPreview('Sales Report', preview);
+        }
+        
+        function previewExpenseReport() {
+            currentReportType = 'expense';
+            const expenses = filterByDateRange(AppData.expenses);
+            currentReportData = expenses;
+            
+            const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
+            
+            const { start, end } = getDateRange();
+            const periodText = start && end ? 
+                `${start.toLocaleDateString()} - ${end.toLocaleDateString()}` : 
+                'All Time';
+            
+            const preview = `
+                <div class="report-header">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <img src="../IDZ-logo.png" alt="Logo" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <h1>${AppData.settings.businessName}</h1>
+                    <h2>Expense Report</h2>
+                    <div class="report-meta">
+                        <div>Period: ${periodText}</div>
+                        <div>Generated: ${new Date().toLocaleString()}</div>
+                    </div>
+                </div>
+                
+                <div class="report-summary">
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Total Expenses</div>
+                        <div class="report-summary-value">${formatCurrency(totalExpenses)}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Expense Count</div>
+                        <div class="report-summary-value">${expenses.length}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Average Expense</div>
+                        <div class="report-summary-value">${formatCurrency(expenses.length > 0 ? totalExpenses / expenses.length : 0)}</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${expenses.map(expense => `
+                                <tr>
+                                    <td>${new Date(expense.date).toLocaleString()}</td>
+                                    <td>${expense.item}</td>
+                                    <td style="color: var(--color-danger); font-weight: 600;">${formatCurrency(expense.amount)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            showPreview('Expense Report', preview);
+        }
+        
+        function previewInventoryReport() {
+            currentReportType = 'inventory';
+            currentReportData = AppData.inventory;
+            
+            const totalValue = AppData.inventory.reduce((sum, item) => sum + (item.sellingPrice * item.quantity), 0);
+            const totalCost = AppData.inventory.reduce((sum, item) => sum + (item.buyingPrice * item.quantity), 0);
+            const potentialProfit = AppData.inventory.reduce((sum, item) => sum + item.netProfit, 0);
+            const totalItems = AppData.inventory.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const preview = `
+                <div class="report-header">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <img src="../IDZ-logo.png" alt="Logo" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <h1>${AppData.settings.businessName}</h1>
+                    <h2>Inventory Report</h2>
+                    <div class="report-meta">
+                        <div>Generated: ${new Date().toLocaleString()}</div>
+                    </div>
+                </div>
+                
+                <div class="report-summary">
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Total Value</div>
+                        <div class="report-summary-value">${formatCurrency(totalValue)}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Total Cost</div>
+                        <div class="report-summary-value">${formatCurrency(totalCost)}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Potential Profit</div>
+                        <div class="report-summary-value">${formatCurrency(potentialProfit)}</div>
+                    </div>
+                    <div class="report-summary-item">
+                        <div class="report-summary-label">Total Items</div>
+                        <div class="report-summary-value">${totalItems}</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Buying Price</th>
+                                <th>Selling Price</th>
+                                <th>Sales Amount</th>
+                                <th>Net Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${AppData.inventory.map(item => {
+                                const salesAmount = item.sellingPrice * item.quantity;
+                                return `
+                                <tr>
+                                    <td style="font-weight: 600;">${item.name}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>${formatCurrency(item.buyingPrice)}</td>
+                                    <td>${formatCurrency(item.sellingPrice)}</td>
+                                    <td style="color: var(--color-info); font-weight: 600;">${formatCurrency(salesAmount)}</td>
+                                    <td style="color: var(--color-success); font-weight: 600;">${formatCurrency(item.netProfit)}</td>
+                                </tr>
+                            `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            showPreview('Inventory Report', preview);
+        }
+        
+        function showPreview(title, content) {
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('reportPreviewContent').innerHTML = content;
+            document.getElementById('reportPreviewSection').style.display = 'block';
+            document.getElementById('reportPreviewSection').scrollIntoView({ behavior: 'smooth' });
+            lucide.createIcons();
+        }
+        
+        // Cache logo to avoid reloading
+        let cachedLogo = null;
+        
+        function downloadCurrentReport() {
+            if (!currentReportType) {
+                showToast('No report to download', 'error');
+                return;
+            }
+            
+            // Show loading toast
+            showToast('Generating PDF...', 'info');
+            
+            // Use setTimeout to allow UI to update
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({
+                        compress: true // Enable PDF compression
+                    });
+                    
+                    const { start, end } = getDateRange();
+                    const periodText = start && end ? 
+                        `${start.toLocaleDateString()} - ${end.toLocaleDateString()}` : 
+                        'All Time';
+                    
+                    // Use cached logo if available
+                    if (cachedLogo) {
+                        addLogoAndGenerate(doc, periodText, cachedLogo);
+                        return;
+                    }
+                    
+                    // Load logo once (no compression, preserve transparency)
+                    const img = new Image();
+                    img.onload = function() {
+                        // Create canvas to preserve transparency
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Use original dimensions
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        
+                        // Draw image with transparency preserved
+                        ctx.drawImage(img, 0, 0);
+                        
+                        // Convert to PNG to preserve transparency (no background layer)
+                        cachedLogo = canvas.toDataURL('image/png');
+                        
+                        addLogoAndGenerate(doc, periodText, cachedLogo);
+                    };
+                    
+                    img.onerror = function() {
+                        console.warn('Logo failed to load, generating without logo');
+                        addLogoAndGenerate(doc, periodText, null);
+                    };
+                    
+                    // Set logo source
+                    const logoPath = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '') + '/../IDZ-logo.png';
+                    img.crossOrigin = 'anonymous';
+                    img.src = logoPath;
+                    
+                } catch (error) {
+                    console.error('PDF generation error:', error);
+                    showToast('Failed to generate PDF', 'error');
+                }
+            }, 100);
+        }
+        
+        function addLogoAndGenerate(doc, periodText, logo) {
+            if (logo) {
+                // Add logo at top center with transparency preserved
+                const logoWidth = 20;
+                const logoHeight = 20;
+                const logoX = (210 - logoWidth) / 2;
+                const logoY = 10;
+                
+                try {
+                    doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+                } catch (e) {
+                    console.warn('Failed to add logo:', e);
+                }
+                
+                // Business name below logo
+                doc.setFontSize(18);
+                doc.setTextColor(124, 58, 237);
+                doc.setFont(undefined, 'bold');
+                doc.text(AppData.settings.businessName, 105, logoY + logoHeight + 8, { align: 'center' });
+            } else {
+                // Business name without logo
+                doc.setFontSize(18);
+                doc.setTextColor(124, 58, 237);
+                doc.setFont(undefined, 'bold');
+                doc.text(AppData.settings.businessName, 105, 20, { align: 'center' });
+            }
+            
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            
+            generateReportContent(doc, periodText);
+        }
+        
+        function generateReportContent(doc, periodText) {
+            if (currentReportType === 'sales') {
+                doc.text('SALES REPORT', 105, 50, { align: 'center' });
+                
+                // Period and date
+                doc.setFontSize(9);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Period: ${periodText}`, 105, 57, { align: 'center' });
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 105, 62, { align: 'center' });
+                
+                // Summary box
+                const totalSales = currentReportData.reduce((sum, s) => sum + s.total, 0);
+                const totalProfit = currentReportData.reduce((sum, s) => sum + s.profit, 0);
+                const totalItems = currentReportData.reduce((sum, s) => sum + s.items.reduce((is, i) => is + i.quantity, 0), 0);
+                
+                doc.setFillColor(240, 240, 240);
+                doc.rect(14, 68, 182, 22, 'F');
+                
+                doc.setFontSize(8);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Total Sales:', 20, 75);
+                doc.setFont(undefined, 'bold');
+                doc.text(formatCurrency(totalSales), 20, 80);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Total Profit:', 75, 75);
+                doc.setFont(undefined, 'bold');
+                doc.text(formatCurrency(totalProfit), 75, 80);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Transactions:', 130, 75);
+                doc.setFont(undefined, 'bold');
+                doc.text(currentReportData.length.toString(), 130, 80);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Items Sold:', 165, 75);
+                doc.setFont(undefined, 'bold');
+                doc.text(totalItems.toString(), 165, 80);
+                
+                // Table - limit rows to prevent massive PDFs
+                const MAX_ROWS = 1000; // Reduced from 5000 for better performance
+                const allSalesItems = currentReportData.flatMap(sale => 
+                    sale.items.map((item, idx) => {
+                        const itemProfit = (item.price - item.buyingPrice) * item.quantity;
+                        
+                        return [
+                            new Date(sale.date).toLocaleString(),
+                            item.name,
+                            item.quantity.toString(),
+                            idx === 0 ? (sale.soldBy || 'Unknown') : '',
+                            idx === 0 ? (sale.paymentMethod || 'Cash') : '',
+                            formatCurrency(item.price * item.quantity),
+                            formatCurrency(itemProfit)
+                        ];
+                    })
+                );
+                
+                const salesData = allSalesItems.slice(0, MAX_ROWS);
+                
+                // Show warning if data was truncated
+                if (allSalesItems.length > MAX_ROWS) {
+                    showToast(`Report limited to ${MAX_ROWS} rows (${allSalesItems.length} total). Use date filters for complete reports.`, 'warning');
+                }
+                
+                doc.autoTable({
+                    startY: 95,
+                    head: [['Date', 'Product', 'Qty', 'Sold By', 'Payment', 'Total', 'Profit']],
+                    body: salesData,
+                    theme: 'striped',
+                    headStyles: { 
+                        fillColor: [124, 58, 237], 
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold',
+                        fontSize: 7
+                    },
+                    styles: { 
+                        fontSize: 6,
+                        cellPadding: 1.5,
+                        lineWidth: 0.1,
+                        overflow: 'linebreak',
+                        cellWidth: 'wrap'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 'auto' },
+                        1: { cellWidth: 'auto' },
+                        2: { cellWidth: 'auto' },
+                        3: { cellWidth: 'auto' },
+                        4: { cellWidth: 'auto' },
+                        5: { cellWidth: 'auto' },
+                        6: { cellWidth: 'auto' }
+                    },
+                    margin: { left: 14, right: 14, top: 20, bottom: 20 },
+                    tableWidth: 'auto',
+                    showHead: 'everyPage',
+                    didParseCell: function(data) {
+                        // Color profit column red if negative
+                        if (data.column.index === 6 && data.section === 'body') {
+                            const value = data.cell.raw;
+                            if (value && value.includes('-')) {
+                                data.cell.styles.textColor = [220, 38, 38];
+                            }
+                        }
+                    }
+                });
+                
+                // Add page numbers to all pages
+                const pageCount = doc.internal.getNumberOfPages();
+                const pageSize = doc.internal.pageSize;
+                const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(100);
+                    doc.text('Page ' + i + ' of ' + pageCount, 14, pageHeight - 10);
+                }
+                
+                // Footer on last page
+                doc.setPage(pageCount);
+                const finalY = doc.lastAutoTable.finalY + 10;
+                doc.setDrawColor(124, 58, 237);
+                doc.setLineWidth(0.5);
+                doc.line(14, finalY, 196, finalY);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(124, 58, 237);
+                doc.setFont(undefined, 'bold');
+                doc.text(`TOTAL SALES: ${formatCurrency(totalSales)}`, 14, finalY + 8);
+                doc.text(`TOTAL PROFIT: ${formatCurrency(totalProfit)}`, 120, finalY + 8);
+                
+                doc.save(`Sales_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+                
+            } else if (currentReportType === 'expense') {
+                doc.text('EXPENSE REPORT', 105, 50, { align: 'center' });
+                
+                doc.setFontSize(9);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Period: ${periodText}`, 105, 57, { align: 'center' });
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 105, 62, { align: 'center' });
+                
+                const totalExpenses = currentReportData.reduce((sum, e) => sum + e.amount, 0);
+                const avgExpense = currentReportData.length > 0 ? totalExpenses / currentReportData.length : 0;
+                
+                doc.setFillColor(240, 240, 240);
+                doc.rect(14, 68, 182, 22, 'F');
+                
+                doc.setFontSize(8);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Total Expenses:', 30, 75);
+                doc.setFont(undefined, 'bold');
+                doc.text(formatCurrency(totalExpenses), 30, 80);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Expense Count:', 95, 75);
+                doc.setFont(undefined, 'bold');
+                doc.text(currentReportData.length.toString(), 95, 80);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Average:', 145, 75);
+                doc.setFont(undefined, 'bold');
+                doc.text(formatCurrency(avgExpense), 145, 80);
+                
+                // Limit rows to prevent massive PDFs
+                const MAX_ROWS = 1000; // Reduced from 5000
+                const expenseData = currentReportData.slice(0, MAX_ROWS).map(expense => [
+                    new Date(expense.date).toLocaleString(),
+                    expense.item,
+                    formatCurrency(expense.amount)
+                ]);
+                
+                if (currentReportData.length > MAX_ROWS) {
+                    showToast(`Report limited to ${MAX_ROWS} rows (${currentReportData.length} total). Use date filters for complete reports.`, 'warning');
+                }
+                
+                doc.autoTable({
+                    startY: 95,
+                    head: [['Date', 'Item', 'Amount']],
+                    body: expenseData,
+                    theme: 'striped',
+                    headStyles: { 
+                        fillColor: [124, 58, 237], 
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold',
+                        fontSize: 9
+                    },
+                    styles: { 
+                        fontSize: 8,
+                        cellPadding: 2,
+                        lineWidth: 0.1,
+                        overflow: 'linebreak',
+                        cellWidth: 'wrap'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    margin: { left: 14, right: 14, top: 20, bottom: 20 },
+                    tableWidth: 'auto',
+                    showHead: 'everyPage'
+                });
+                
+                // Add page numbers to all pages
+                const pageCountExp = doc.internal.getNumberOfPages();
+                const pageSizeExp = doc.internal.pageSize;
+                const pageHeightExp = pageSizeExp.height ? pageSizeExp.height : pageSizeExp.getHeight();
+                for (let i = 1; i <= pageCountExp; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(100);
+                    doc.text('Page ' + i + ' of ' + pageCountExp, 14, pageHeightExp - 10);
+                }
+                
+                // Footer on last page
+                doc.setPage(pageCountExp);
+                const finalY = doc.lastAutoTable.finalY + 10;
+                doc.setDrawColor(124, 58, 237);
+                doc.setLineWidth(0.5);
+                doc.line(14, finalY, 196, finalY);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(124, 58, 237);
+                doc.setFont(undefined, 'bold');
+                doc.text(`TOTAL EXPENSES: ${formatCurrency(totalExpenses)}`, 14, finalY + 8);
+                
+                doc.save(`Expense_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+                
+            } else if (currentReportType === 'inventory') {
+                doc.text('INVENTORY REPORT', 105, 50, { align: 'center' });
+                
+                doc.setFontSize(9);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 105, 57, { align: 'center' });
+                
+                const totalValue = currentReportData.reduce((sum, item) => sum + (item.sellingPrice * item.quantity), 0);
+                const totalCost = currentReportData.reduce((sum, item) => sum + (item.buyingPrice * item.quantity), 0);
+                const potentialProfit = currentReportData.reduce((sum, item) => sum + item.netProfit, 0);
+                const totalItems = currentReportData.reduce((sum, item) => sum + item.quantity, 0);
+                
+                doc.setFillColor(240, 240, 240);
+                doc.rect(14, 63, 182, 22, 'F');
+                
+                doc.setFontSize(8);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Total Value:', 20, 70);
+                doc.setFont(undefined, 'bold');
+                doc.text(formatCurrency(totalValue), 20, 75);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Total Cost:', 70, 70);
+                doc.setFont(undefined, 'bold');
+                doc.text(formatCurrency(totalCost), 70, 75);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Potential Profit:', 120, 70);
+                doc.setFont(undefined, 'bold');
+                doc.text(formatCurrency(potentialProfit), 120, 75);
+                
+                doc.setFont(undefined, 'normal');
+                doc.text('Total Items:', 170, 70);
+                doc.setFont(undefined, 'bold');
+                doc.text(totalItems.toString(), 170, 75);
+                
+                // Limit rows to prevent massive PDFs
+                const MAX_ROWS = 1000; // Reduced from 5000
+                const inventoryData = currentReportData.slice(0, MAX_ROWS).map(item => {
+                    const salesAmount = item.sellingPrice * item.quantity;
+                    return [
+                        item.name,
+                        item.quantity.toString(),
+                        formatCurrency(item.buyingPrice),
+                        formatCurrency(item.sellingPrice),
+                        formatCurrency(salesAmount),
+                        formatCurrency(item.netProfit)
+                    ];
+                });
+                
+                if (currentReportData.length > MAX_ROWS) {
+                    showToast(`Report limited to ${MAX_ROWS} rows (${currentReportData.length} total).`, 'warning');
+                }
+                
+                doc.autoTable({
+                    startY: 90,
+                    head: [['Product', 'Qty', 'Buy Price', 'Sell Price', 'Sales Amount', 'Net Profit']],
+                    body: inventoryData,
+                    theme: 'striped',
+                    headStyles: { 
+                        fillColor: [124, 58, 237], 
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold',
+                        fontSize: 8
+                    },
+                    styles: { 
+                        fontSize: 7,
+                        cellPadding: 1.5,
+                        lineWidth: 0.1,
+                        overflow: 'linebreak',
+                        cellWidth: 'wrap'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [245, 245, 245]
+                    },
+                    margin: { left: 14, right: 14, top: 20, bottom: 20 },
+                    tableWidth: 'auto',
+                    showHead: 'everyPage'
+                });
+                
+                // Add page numbers to all pages
+                const pageCountInv = doc.internal.getNumberOfPages();
+                const pageSizeInv = doc.internal.pageSize;
+                const pageHeightInv = pageSizeInv.height ? pageSizeInv.height : pageSizeInv.getHeight();
+                for (let i = 1; i <= pageCountInv; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(100);
+                    doc.text('Page ' + i + ' of ' + pageCountInv, 14, pageHeightInv - 10);
+                }
+                
+                // Footer on last page
+                doc.setPage(pageCountInv);
+                const finalY = doc.lastAutoTable.finalY + 10;
+                doc.setDrawColor(124, 58, 237);
+                doc.setLineWidth(0.5);
+                doc.line(14, finalY, 196, finalY);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(124, 58, 237);
+                doc.setFont(undefined, 'bold');
+                doc.text(`TOTAL VALUE: ${formatCurrency(totalValue)}`, 14, finalY + 8);
+                doc.text(`POTENTIAL PROFIT: ${formatCurrency(potentialProfit)}`, 120, finalY + 8);
+                
+                doc.save(`Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+            }
+            
+            showToast('Report downloaded successfully', 'success');
+        }
+        
+        initializeDates();
+        lucide.createIcons();
+    </script>
+</body>
+</html>

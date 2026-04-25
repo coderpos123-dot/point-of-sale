@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel Deployment Test - International Dealers ZM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            display: block;
+            border-radius: 10px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background: #ccc;
+        }
+        .status.loading {
+            background: #ffc107;
+            animation: pulse 1.5s infinite;
+        }
+        .status.success {
+            background: #4caf50;
+        }
+        .status.error {
+            background: #f44336;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .test-label {
+            flex: 1;
+            color: #333;
+        }
+        .test-result {
+            color: #666;
+            font-size: 14px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .link-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        .link-section a {
+            display: block;
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        .link-section a:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/IDZ-logo.png" alt="International Dealers ZM" class="logo" onerror="this.style.display='none'">
+        <h1>🚀 Vercel Deployment Test</h1>
+        <p class="subtitle">International Dealers ZM - POS System</p>
+        
+        <div class="test-section">
+            <div class="test-item">
+                <div class="status" id="status-static"></div>
+                <div class="test-label">Static Files</div>
+                <div class="test-result" id="result-static">Testing...</div>
+            </div>
+            <div class="test-item">
+                <div class="status" id="status-logo"></div>
+                <div class="test-label">Logo Image</div>
+                <div class="test-result" id="result-logo">Testing...</div>
+            </div>
+            <div class="test-item">
+                <div class="status" id="status-api"></div>
+                <div class="test-label">API Health Check</div>
+                <div class="test-result" id="result-api">Testing...</div>
+            </div>
+            <div class="test-item">
+                <div class="status" id="status-settings"></div>
+                <div class="test-label">Settings API</div>
+                <div class="test-result" id="result-settings">Testing...</div>
+            </div>
+        </div>
+        
+        <button id="runTests" onclick="runTests()">Run Tests</button>
+        
+        <div class="link-section">
+            <strong>Quick Links:</strong>
+            <a href="/">← Back to Login</a>
+            <a href="/pages/dashboard.html">Dashboard →</a>
+            <a href="/api/health" target="_blank">API Health Check →</a>
+        </div>
+    </div>
+
+    <script>
+        // Test static files (this page loaded successfully)
+        document.getElementById('status-static').className = 'status success';
+        document.getElementById('result-static').textContent = '✓ Working';
+
+        // Test logo
+        const logo = document.querySelector('.logo');
+        logo.onload = function() {
+            document.getElementById('status-logo').className = 'status success';
+            document.getElementById('result-logo').textContent = '✓ Loaded';
+        };
+        logo.onerror = function() {
+            document.getElementById('status-logo').className = 'status error';
+            document.getElementById('result-logo').textContent = '✗ Not found';
+        };
+
+        async function runTests() {
+            const button = document.getElementById('runTests');
+            button.disabled = true;
+            button.textContent = 'Testing...';
+
+            // Test API Health
+            try {
+                document.getElementById('status-api').className = 'status loading';
+                const healthResponse = await fetch('/api/health');
+                const healthData = await healthResponse.json();
+                
+                if (healthResponse.ok && healthData.status === 'ok') {
+                    document.getElementById('status-api').className = 'status success';
+                    document.getElementById('result-api').textContent = `✓ ${healthData.environment}`;
+                } else {
+                    throw new Error('Invalid response');
+                }
+            } catch (error) {
+                document.getElementById('status-api').className = 'status error';
+                document.getElementById('result-api').textContent = '✗ Failed';
+            }
+
+            // Test Settings API
+            try {
+                document.getElementById('status-settings').className = 'status loading';
+                const settingsResponse = await fetch('/api/settings');
+                const settingsData = await settingsResponse.json();
+                
+                if (settingsResponse.ok && settingsData.businessName) {
+                    document.getElementById('status-settings').className = 'status success';
+                    document.getElementById('result-settings').textContent = `✓ ${settingsData.businessName}`;
+                } else {
+                    throw new Error('Invalid response');
+                }
+            } catch (error) {
+                document.getElementById('status-settings').className = 'status error';
+                document.getElementById('result-settings').textContent = '✗ Failed';
+            }
+
+            button.disabled = false;
+            button.textContent = 'Run Tests Again';
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 500);
+        });
+    </script>
+</body>
+</html>
