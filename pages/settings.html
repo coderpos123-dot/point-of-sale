@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Settings - International Dealers ZM</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            <div class="content-wrapper">
+                <!-- Account Center -->
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="user-circle"></i>Account Center</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                            <button class="action-btn" onclick="window.location.href='profile.html'">
+                                <i data-lucide="user"></i>Edit Profile
+                            </button>
+                            <button class="action-btn secondary" onclick="showChangePasswordModal()">
+                                <i data-lucide="lock"></i>Change Password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings -->
+                <div class="content-card" style="margin-top: var(--spacing-xl);">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="settings"></i>System Settings</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <form id="settingsForm">
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="store" class="label-icon"></i>Business Name</label>
+                                <input type="text" id="businessName" class="form-input" placeholder="Enter business name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="palette" class="label-icon"></i>Theme</label>
+                                <select id="themeSelect" class="form-input">
+                                    <option value="dark">Dark Mode</option>
+                                    <option value="light">Light Mode</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary"><i data-lucide="save" class="btn-icon"></i>Save Settings</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Password & Security -->
+                <div class="content-card" style="margin-top: var(--spacing-xl);">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="shield"></i>Password & Security</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <h3 style="font-size: var(--text-lg); margin-bottom: var(--spacing-md); color: var(--text-primary);">Active Sessions</h3>
+                        <div id="sessionsList" style="display: flex; flex-direction: column; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg);"></div>
+                        <button class="action-btn danger" onclick="logoutAllDevices()">
+                            <i data-lucide="log-out"></i>Logout All Devices
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div class="content-card" style="margin-top: var(--spacing-xl);">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="database"></i>Data Management</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                            <button class="action-btn" onclick="exportData()">
+                                <i data-lucide="download"></i>Export All Data (Backup)
+                            </button>
+                            <button class="action-btn secondary" onclick="document.getElementById('importFileInput').click()">
+                                <i data-lucide="upload"></i>Import Data (Restore)
+                            </button>
+                            <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importData(event)">
+                            <button class="action-btn danger" onclick="confirmEraseData()">
+                                <i data-lucide="trash-2"></i>Erase All Data
+                            </button>
+                            <button class="action-btn danger" onclick="confirmDeleteAccount()">
+                                <i data-lucide="user-x"></i>Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About & Legal -->
+                <div class="content-card" style="margin-top: var(--spacing-xl);">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="info"></i>About & Legal</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                            <button class="action-btn secondary" onclick="showAbout()">
+                                <i data-lucide="help-circle"></i>About
+                            </button>
+                            <button class="action-btn secondary" onclick="showPrivacyPolicy()">
+                                <i data-lucide="shield-check"></i>Privacy Policy
+                            </button>
+                            <button class="action-btn secondary" onclick="showTermsOfService()">
+                                <i data-lucide="file-text"></i>Terms of Service
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i data-lucide="lock" class="title-icon"></i>Change Password</h2>
+                <button onclick="closeChangePasswordModal()" class="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="changePasswordForm" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label"><i data-lucide="lock" class="label-icon"></i>Current Password</label>
+                    <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i data-lucide="lock" class="label-icon"></i>New Password</label>
+                    <input type="password" id="newPasswordInput" class="form-input" placeholder="Enter new password" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i data-lucide="lock" class="label-icon"></i>Confirm New Password</label>
+                    <input type="password" id="confirmNewPassword" class="form-input" placeholder="Confirm new password" required>
+                </div>
+                <button type="submit" class="btn-primary"><i data-lucide="check" class="btn-icon"></i>Change Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="infoModalTitle"><i data-lucide="info" class="title-icon"></i>Information</h2>
+                <button onclick="closeInfoModal()" class="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-form" id="infoModalContent" style="max-height: 60vh; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        // Authentication check
+        if (!AppData.user || !isLoggedIn()) window.location.href = '../index.html';
+        
+        // Workers cannot access settings
+        if (AppData.user.role === 'worker') {
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Wait for components to load before initializing
+        function waitForComponents() {
+            const sidebar = document.getElementById('sidebar');
+            const topbar = document.querySelector('.topbar');
+            
+            if (sidebar && topbar) {
+                console.log('Components loaded, initializing settings page');
+                initializeSettingsPage();
+            } else {
+                console.log('Waiting for components...');
+                setTimeout(waitForComponents, 200);
+            }
+        }
+        
+        function initializeSettingsPage() {
+            // Settings form handler
+            const settingsForm = document.getElementById('settingsForm');
+            if (settingsForm) {
+                settingsForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    // Update business settings
+                    AppData.settings.businessName = document.getElementById('businessName').value;
+                    
+                    // Update theme
+                    const newTheme = document.getElementById('themeSelect').value;
+                    if (newTheme !== AppData.settings.theme) {
+                        AppData.settings.theme = newTheme;
+                        document.documentElement.setAttribute('data-theme', newTheme);
+                        localStorage.setItem('theme', newTheme);
+                        if (typeof updateThemeIcon === 'function') {
+                            updateThemeIcon(newTheme);
+                        }
+                    }
+                    
+                    saveData();
+                    showToast('Settings saved successfully', 'success');
+                    
+                    // Refresh icons to ensure they display properly
+                    setTimeout(() => {
+                        if (typeof lucide !== 'undefined') {
+                            lucide.createIcons();
+                        }
+                    }, 100);
+                });
+            }
+
+            // Change password form handler
+            const changePasswordForm = document.getElementById('changePasswordForm');
+            if (changePasswordForm) {
+                changePasswordForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const current = document.getElementById('currentPassword').value;
+                    const newPass = document.getElementById('newPasswordInput').value;
+                    const confirm = document.getElementById('confirmNewPassword').value;
+
+                    if (current !== AppData.user.password) {
+                        showToast('Current password is incorrect', 'error');
+                        return;
+                    }
+
+                    if (newPass.length < 6) {
+                        showToast('Password must be at least 6 characters', 'error');
+                        return;
+                    }
+
+                    if (newPass !== confirm) {
+                        showToast('Passwords do not match', 'error');
+                        return;
+                    }
+
+                    AppData.user.password = newPass;
+                    saveData();
+                    closeChangePasswordModal();
+                    showToast('Password changed successfully', 'success');
+                });
+            }
+            
+            // Initialize page
+            loadSettings();
+            lucide.createIcons();
+        }
+        
+        // Start initialization
+        setTimeout(waitForComponents, 100);
+    </script>
+</body>
+</html>

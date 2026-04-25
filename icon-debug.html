@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #0f0f23;
+            color: #f8fafc;
+        }
+        
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #1a1f2e;
+        }
+        
+        .test-button {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            padding: 0.75rem 1rem !important;
+            margin: 0.5rem !important;
+            background: #16213e !important;
+            color: #f8fafc !important;
+            border: 2px solid #2d3748 !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+        }
+        
+        .test-button.danger {
+            background: #ef4444 !important;
+            color: white !important;
+            border-color: #dc2626 !important;
+        }
+        
+        .test-button i,
+        .test-button [data-lucide] {
+            display: inline-flex !important;
+            width: 18px !important;
+            height: 18px !important;
+            flex-shrink: 0 !important;
+        }
+        
+        .debug-info {
+            background: #000;
+            color: #0f0;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        .icon-test {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin: 5px;
+            border: 1px solid #666;
+            padding: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 ICON DEBUG TEST PAGE</h1>
+    
+    <div class="test-section">
+        <h2>1. Basic Icon Tests</h2>
+        <p>Testing different icon loading methods:</p>
+        
+        <div>
+            <strong>Lucide Icons (data-lucide):</strong><br>
+            <i data-lucide="check-check" class="icon-test"></i> check-check
+            <i data-lucide="trash-2" class="icon-test"></i> trash-2
+            <i data-lucide="bell" class="icon-test"></i> bell
+            <i data-lucide="x" class="icon-test"></i> x
+        </div>
+        
+        <div>
+            <strong>Emoji Fallbacks:</strong><br>
+            <span class="icon-test">✓✓</span> check-check
+            <span class="icon-test">🗑️</span> trash-2
+            <span class="icon-test">🔔</span> bell
+            <span class="icon-test">❌</span> x
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Button Tests (Exact Notification Buttons)</h2>
+        
+        <button class="test-button" id="testMarkAllBtn">
+            <i data-lucide="check-check"></i>
+            Mark All as Read
+        </button>
+        
+        <button class="test-button danger" id="testClearAllBtn">
+            <i data-lucide="trash-2"></i>
+            Clear All
+        </button>
+        
+        <button class="test-button" onclick="testIconRefresh()">
+            <i data-lucide="refresh-cw"></i>
+            Refresh Icons
+        </button>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Diagnostic Information</h2>
+        <div id="debugOutput" class="debug-info">Loading diagnostics...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Manual Icon Injection Test</h2>
+        <button onclick="injectEmojiFallbacks()" class="test-button">
+            <i data-lucide="zap"></i>
+            Inject Emoji Fallbacks
+        </button>
+        
+        <button onclick="testLucideDirectly()" class="test-button">
+            <i data-lucide="code"></i>
+            Test Lucide Directly
+        </button>
+    </div>
+    
+    <!-- Load Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        let debugLog = [];
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}`;
+            debugLog.push(logMessage);
+            console.log(logMessage);
+            updateDebugOutput();
+        }
+        
+        function updateDebugOutput() {
+            document.getElementById('debugOutput').textContent = debugLog.join('\n');
+        }
+        
+        function testIconRefresh() {
+            log('🔄 Testing icon refresh...');
+            
+            if (typeof lucide !== 'undefined') {
+                log('✅ Lucide library is available');
+                log(`Lucide version: ${lucide.VERSION || 'unknown'}`);
+                
+                if (typeof lucide.createIcons === 'function') {
+                    log('✅ lucide.createIcons is available');
+                    try {
+                        lucide.createIcons();
+                        log('✅ lucide.createIcons() executed successfully');
+                    } catch (error) {
+                        log(`❌ Error calling lucide.createIcons(): ${error.message}`);
+                    }
+                } else {
+                    log('❌ lucide.createIcons is not a function');
+                }
+            } else {
+                log('❌ Lucide library is not available');
+            }
+            
+            // Check if icons were created
+            setTimeout(() => {
+                const icons = document.querySelectorAll('[data-lucide]');
+                log(`Found ${icons.length} icons with data-lucide attribute`);
+                
+                icons.forEach((icon, index) => {
+                    const iconName = icon.getAttribute('data-lucide');
+                    const hasContent = icon.innerHTML.trim().length > 0;
+                    const rect = icon.getBoundingClientRect();
+                    const isVisible = rect.width > 0 && rect.height > 0;
+                    
+                    log(`Icon ${index + 1} (${iconName}): content=${hasContent}, visible=${isVisible}, innerHTML="${icon.innerHTML.substring(0, 50)}"`);
+                });
+            }, 100);
+        }
+        
+        function injectEmojiFallbacks() {
+            log('🔧 Injecting emoji fallbacks...');
+            
+            const fallbackMap = {
+                'check-check': '✓✓',
+                'trash-2': '🗑️',
+                'bell': '🔔',
+                'x': '❌',
+                'refresh-cw': '🔄',
+                'zap': '⚡',
+                'code': '💻'
+            };
+            
+            const icons = document.querySelectorAll('[data-lucide]');
+            let injected = 0;
+            
+            icons.forEach((icon) => {
+                const iconName = icon.getAttribute('data-lucide');
+                if (fallbackMap[iconName]) {
+                    icon.innerHTML = fallbackMap[iconName];
+                    icon.style.fontSize = '16px';
+                    icon.style.display = 'inline-flex';
+                    icon.style.alignItems = 'center';
+                    icon.style.justifyContent = 'center';
+                    injected++;
+                    log(`✅ Injected emoji for ${iconName}: ${fallbackMap[iconName]}`);
+                }
+            });
+            
+            log(`✅ Injected ${injected} emoji fallbacks`);
+        }
+        
+        function testLucideDirectly() {
+            log('🧪 Testing Lucide directly...');
+            
+            // Test if we can create icons manually
+            if (typeof lucide !== 'undefined') {
+                try {
+                    // Try to create a specific icon
+                    const testIcon = document.createElement('i');
+                    testIcon.setAttribute('data-lucide', 'heart');
+                    document.body.appendChild(testIcon);
+                    
+                    lucide.createIcons();
+                    
+                    setTimeout(() => {
+                        const hasContent = testIcon.innerHTML.trim().length > 0;
+                        log(`Direct icon test: ${hasContent ? 'SUCCESS' : 'FAILED'}`);
+                        log(`Test icon innerHTML: "${testIcon.innerHTML}"`);
+                        document.body.removeChild(testIcon);
+                    }, 100);
+                    
+                } catch (error) {
+                    log(`❌ Direct Lucide test failed: ${error.message}`);
+                }
+            }
+        }
+        
+        // Initialize diagnostics
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Icon Debug Test Page Loaded');
+            
+            // Check Lucide availability
+            log(`Lucide available: ${typeof lucide !== 'undefined'}`);
+            
+            if (typeof lucide !== 'undefined') {
+                log(`Lucide object keys: ${Object.keys(lucide).join(', ')}`);
+            }
+            
+            // Check initial icon state
+            const icons = document.querySelectorAll('[data-lucide]');
+            log(`Initial icon count: ${icons.length}`);
+            
+            // Auto-refresh icons
+            setTimeout(() => {
+                log('🔄 Auto-refreshing icons...');
+                testIconRefresh();
+            }, 500);
+            
+            // Check network requests
+            log('📡 Checking network requests...');
+            
+            // Test button clicks
+            document.getElementById('testMarkAllBtn').addEventListener('click', () => {
+                log('🖱️ Mark All button clicked');
+            });
+            
+            document.getElementById('testClearAllBtn').addEventListener('click', () => {
+                log('🖱️ Clear All button clicked');
+            });
+        });
+        
+        // Monitor for any errors
+        window.addEventListener('error', (event) => {
+            log(`❌ JavaScript Error: ${event.message} at ${event.filename}:${event.lineno}`);
+        });
+        
+        // Check if Lucide loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('📄 Page fully loaded, final icon check...');
+                testIconRefresh();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

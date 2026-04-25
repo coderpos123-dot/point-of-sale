@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Transaction History - POS System</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            <div class="content-wrapper">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="history"></i>Transaction History</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div class="search-filter-bar">
+                            <div class="search-box">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" id="searchTransaction" placeholder="Search transactions...">
+                            </div>
+                            <select id="filterType" class="filter-select">
+                                <option value="all">All Types</option>
+                                <option value="sale">Sales</option>
+                            </select>
+                            <select id="filterDate" class="filter-select">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="year">This Year</option>
+                            </select>
+                        </div>
+                        <div id="transactionList" class="transaction-list"></div>
+                        <div id="emptyTransactions" class="empty-state" style="display: none;">
+                            <i data-lucide="history" class="empty-state-icon"></i>
+                            <h3 class="empty-state-title">No Transactions</h3>
+                            <p class="empty-state-message">Your transaction history will appear here</p>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div id="paginationContainer" style="display: none; margin-top: var(--spacing-lg); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-md);">
+                            <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+                                Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalItems">0</span> transactions
+                            </div>
+                            <div style="display: flex; gap: var(--spacing-xs); flex-wrap: wrap;">
+                                <button id="prevPage" class="action-btn secondary" style="padding: 0.5rem 1rem;" onclick="changePage(-1)">
+                                    <i data-lucide="chevron-left"></i>
+                                    Previous
+                                </button>
+                                <div id="pageNumbers" style="display: flex; gap: var(--spacing-xs); flex-wrap: wrap;"></div>
+                                <button id="nextPage" class="action-btn secondary" style="padding: 0.5rem 1rem;" onclick="changePage(1)">
+                                    Next
+                                    <i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        // Authentication check
+        if (!AppData.user || !isLoggedIn()) window.location.href = '../index.html';
+        
+        // Wait for components to load before initializing
+        function waitForComponents() {
+            const sidebar = document.getElementById('sidebar');
+            const topbar = document.querySelector('.topbar');
+            
+            if (sidebar && topbar) {
+                console.log('Components loaded, initializing transaction history page');
+                initializeTransactionHistoryPage();
+            } else {
+                console.log('Waiting for components...');
+                setTimeout(waitForComponents, 200);
+            }
+        }
+        
+        function initializeTransactionHistoryPage() {
+            // Event listeners for search and filters
+            const searchTransaction = document.getElementById('searchTransaction');
+            if (searchTransaction) {
+                searchTransaction.addEventListener('input', loadTransactionHistory);
+            }
+            const filterType = document.getElementById('filterType');
+            if (filterType) {
+                filterType.addEventListener('change', loadTransactionHistory);
+            }
+            const filterDate = document.getElementById('filterDate');
+            if (filterDate) {
+                filterDate.addEventListener('change', loadTransactionHistory);
+            }
+            
+            // Initialize page
+            loadTransactionHistory();
+            lucide.createIcons();
+        }
+        
+        // Start initialization
+        setTimeout(waitForComponents, 100);
+    </script>
+</body>
+</html>

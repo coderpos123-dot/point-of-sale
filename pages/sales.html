@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Sales - POS System</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            
+            <div class="content-wrapper">
+                <!-- Daily Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="dollar-sign" class="label-icon"></i>
+                                Today's Sales
+                            </div>
+                            <div class="stat-card-icon success">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="todaySales">ZMW 0.00</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="calendar"></i>
+                            <span id="todayDate">Today</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="shopping-cart" class="label-icon"></i>
+                                Transactions
+                            </div>
+                            <div class="stat-card-icon primary">
+                                <i data-lucide="receipt"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="todayTransactions">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="activity"></i>
+                            <span>Sales today</span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="trending-up" class="label-icon"></i>
+                                Today's Profit
+                            </div>
+                            <div class="stat-card-icon info">
+                                <i data-lucide="bar-chart"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="todayProfit">ZMW 0.00</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="arrow-up"></i>
+                            <span>Net profit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="package" class="label-icon"></i>
+                                Items Sold
+                            </div>
+                            <div class="stat-card-icon warning">
+                                <i data-lucide="box"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="itemsSold">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="layers"></i>
+                            <span>Products</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sales Cart -->
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title">
+                            <i data-lucide="shopping-cart"></i>
+                            Sales Cart
+                        </h2>
+                        <div class="content-card-actions">
+                            <button class="action-btn" onclick="showProductModal()">
+                                <i data-lucide="plus"></i>
+                                Add to Cart
+                            </button>
+                            <button class="action-btn danger" onclick="clearCart()" id="clearCartBtn" style="display: none;">
+                                <i data-lucide="trash-2"></i>
+                                Clear Cart
+                            </button>
+                        </div>
+                    </div>
+                    <div class="content-card-body">
+                        <div id="cartItems" class="cart-items">
+                            <!-- Cart items will be loaded here -->
+                        </div>
+                        
+                        <div id="emptyCart" class="empty-state">
+                            <i data-lucide="shopping-cart" class="empty-state-icon"></i>
+                            <h3 class="empty-state-title">Cart is Empty</h3>
+                            <p class="empty-state-message">Add products to start a sale</p>
+                            <button class="action-btn" onclick="showProductModal()">
+                                <i data-lucide="plus"></i>
+                                Add First Product
+                            </button>
+                        </div>
+                        
+                        <div id="cartSummary" class="cart-summary" style="display: none;">
+                            <div class="cart-summary-row">
+                                <span>Subtotal:</span>
+                                <span id="cartSubtotal">ZMW 0.00</span>
+                            </div>
+                            <div class="cart-summary-row total">
+                                <span>Total:</span>
+                                <span id="cartTotal">ZMW 0.00</span>
+                            </div>
+                            <div class="cart-summary-row" style="color: var(--color-success); font-weight: 600;">
+                                <span>Net Profit:</span>
+                                <span id="cartNetProfit">ZMW 0.00</span>
+                            </div>
+                            
+                            <!-- Payment Method Selection -->
+                            <div class="form-group" style="margin-top: var(--spacing-md);">
+                                <label class="form-label">
+                                    <i data-lucide="credit-card" class="label-icon"></i>
+                                    Payment Method
+                                </label>
+                                <select id="paymentMethod" class="form-input">
+                                    <option value="Cash">Cash</option>
+                                    <option value="Mobile Money">Mobile Money</option>
+                                    <option value="Cash + Mobile Money">Cash + Mobile Money</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn-primary" onclick="completeSale()" style="width: 100%; margin-top: var(--spacing-md);">
+                                <i data-lucide="check-circle"></i>
+                                Complete Sale
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button class="fab" onclick="showProductModal()" title="Add Product to Cart">
+        <i data-lucide="plus"></i>
+    </button>
+
+    <!-- Add Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i data-lucide="package-plus" class="title-icon"></i>
+                    Add Product to Cart
+                </h2>
+                <button onclick="closeProductModal()" class="modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="modal-form">
+                <div class="search-box" style="margin-bottom: var(--spacing-lg);">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="searchProduct" placeholder="Search available products...">
+                </div>
+                
+                <div id="productList" class="product-list">
+                    <!-- Products will be loaded here -->
+                </div>
+                
+                <div id="emptyProducts" class="empty-state" style="display: none;">
+                    <i data-lucide="package-x" class="empty-state-icon"></i>
+                    <h3 class="empty-state-title">No Products Available</h3>
+                    <p class="empty-state-message">Add items to inventory first</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        if (!AppData.user || !isLoggedIn()) window.location.href = '../index.html';
+        
+        // Use global cart from main.js - don't redeclare
+        
+        function calculateItemsSold() {
+            return AppData.sales
+                .filter(sale => new Date(sale.date).toDateString() === new Date().toDateString())
+                .reduce((sum, sale) => sum + sale.items.reduce((s, item) => s + item.quantity, 0), 0);
+        }
+        
+                
+        function loadProductList() {
+            const searchTerm = document.getElementById('searchProduct').value.toLowerCase();
+            const products = AppData.inventory.filter(item => 
+                item.quantity > 0 && item.name.toLowerCase().includes(searchTerm)
+            );
+            
+            const productList = document.getElementById('productList');
+            const emptyProducts = document.getElementById('emptyProducts');
+            
+            if (products.length === 0) {
+                productList.innerHTML = '';
+                emptyProducts.style.display = 'flex';
+            } else {
+                emptyProducts.style.display = 'none';
+                productList.innerHTML = products.map(product => `
+                    <div class="product-item" onclick="addToCart('${product.id}')">
+                        <div class="product-info">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-stock">Stock: ${product.quantity}</div>
+                        </div>
+                        <div class="product-price">${formatCurrency(product.sellingPrice)}</div>
+                    </div>
+                `).join('');
+            }
+            lucide.createIcons();
+        }
+        
+        function addToCart(productId) {
+            console.log('🛒 Adding product to cart:', productId);
+            const product = AppData.inventory.find(p => p.id === productId);
+            if (!product || product.quantity === 0) {
+                console.error('❌ Product not available:', productId);
+                showToast('Product not available', 'error');
+                return;
+            }
+            
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                if (existingItem.quantity >= product.quantity) {
+                    console.warn('⚠️ Cannot add more than available stock');
+                    showToast('Cannot add more than available stock', 'warning');
+                    return;
+                }
+                existingItem.quantity++;
+                console.log('✅ Increased quantity for existing item');
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.sellingPrice,
+                    buyingPrice: product.buyingPrice,
+                    quantity: 1,
+                    maxQuantity: product.quantity
+                });
+                console.log('✅ Added new item to cart');
+            }
+            
+            updateCart();
+            closeProductModal();
+            showToast('Product added to cart', 'success');
+        }
+        
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const emptyCart = document.getElementById('emptyCart');
+            const cartSummary = document.getElementById('cartSummary');
+            const clearCartBtn = document.getElementById('clearCartBtn');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '';
+                emptyCart.style.display = 'flex';
+                cartSummary.style.display = 'none';
+                clearCartBtn.style.display = 'none';
+            } else {
+                emptyCart.style.display = 'none';
+                cartSummary.style.display = 'block';
+                clearCartBtn.style.display = 'flex';
+                
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${formatCurrency(item.price)} each</div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="quantity-controls">
+                                <button onclick="decreaseQuantity('${item.id}')" class="qty-btn">
+                                    <i data-lucide="minus"></i>
+                                </button>
+                                <input type="number" value="${item.quantity}" 
+                                    onchange="updateQuantity('${item.id}', this.value)"
+                                    min="1" max="${item.maxQuantity}" class="qty-input">
+                                <button onclick="increaseQuantity('${item.id}')" class="qty-btn">
+                                    <i data-lucide="plus"></i>
+                                </button>
+                            </div>
+                            <input type="number" value="${item.price}" step="0.01" 
+                                onchange="updatePrice('${item.id}', this.value)"
+                                class="price-input" placeholder="Price">
+                            <div class="cart-item-total">${formatCurrency(item.price * item.quantity)}</div>
+                            <button onclick="removeFromCart('${item.id}')" class="table-btn delete">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const netProfit = cart.reduce((sum, item) => sum + ((item.price - item.buyingPrice) * item.quantity), 0);
+                
+                // Color code profit - red if negative, green if positive
+                const profitColor = netProfit >= 0 ? 'var(--color-success)' : 'var(--color-danger)';
+                
+                document.getElementById('cartSubtotal').textContent = formatCurrency(total);
+                document.getElementById('cartTotal').textContent = formatCurrency(total);
+                const profitElement = document.getElementById('cartNetProfit');
+                profitElement.textContent = formatCurrency(netProfit);
+                profitElement.style.color = profitColor;
+            }
+            lucide.createIcons();
+        }
+        
+        function increaseQuantity(id) {
+            const item = cart.find(i => i.id === id);
+            if (item && item.quantity < item.maxQuantity) {
+                item.quantity++;
+                updateCart();
+            } else {
+                showToast('Maximum quantity reached', 'warning');
+            }
+        }
+        
+        function decreaseQuantity(id) {
+            const item = cart.find(i => i.id === id);
+            if (item && item.quantity > 1) {
+                item.quantity--;
+                updateCart();
+            }
+        }
+        
+        function updateQuantity(id, value) {
+            const item = cart.find(i => i.id === id);
+            const qty = parseInt(value);
+            if (item && qty > 0 && qty <= item.maxQuantity) {
+                item.quantity = qty;
+                updateCart();
+            } else {
+                showToast('Invalid quantity', 'error');
+                updateCart();
+            }
+        }
+        
+        function updatePrice(id, value) {
+            const item = cart.find(i => i.id === id);
+            const price = parseFloat(value);
+            if (item && price > 0) {
+                item.price = price;
+                updateCart();
+            } else {
+                showToast('Invalid price', 'error');
+                updateCart();
+            }
+        }
+        
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+            showToast('Item removed from cart', 'info');
+        }
+        
+        function clearCart() {
+            if (confirm('Clear all items from cart?')) {
+                cart = [];
+                updateCart();
+                showToast('Cart cleared', 'info');
+            }
+        }
+        
+        function completeSale() {
+            if (cart.length === 0) {
+                showToast('Cart is empty', 'error');
+                return;
+            }
+            
+            // Get payment method
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            
+            const result = recordSale(cart, paymentMethod);
+            if (result.success) {
+                showToast('Sale completed successfully!', 'success');
+                cart = [];
+                updateCart();
+                loadSalesData();
+            } else {
+                showToast(result.message, 'error');
+            }
+        }
+        
+        const searchProduct = document.getElementById('searchProduct');
+        if (searchProduct) {
+            searchProduct.addEventListener('input', loadProductList);
+        }
+        
+        loadSalesData();
+        updateCart();
+        
+        // Force icon refresh for sales page
+        function forceIconRefresh() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+                console.log('✅ Icons refreshed for sales page');
+            } else {
+                setTimeout(forceIconRefresh, 100);
+            }
+        }
+        
+        // Multiple attempts to ensure icons load
+        forceIconRefresh();
+        setTimeout(forceIconRefresh, 200);
+        
+        // Force refresh on page visibility
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                setTimeout(forceIconRefresh, 100);
+            }
+        });
+    </script>
+</body>
+</html>
