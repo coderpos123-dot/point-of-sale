@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -490,3 +491,497 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Inventory - POS System</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            
+            <div class="content-wrapper">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="package" class="label-icon"></i>
+                                Total Items
+                            </div>
+                            <div class="stat-card-icon primary">
+                                <i data-lucide="box"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalItems">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="layers"></i>
+                            <span>Products in stock</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="trending-up" class="label-icon"></i>
+                                Total Value
+                            </div>
+                            <div class="stat-card-icon success">
+                                <i data-lucide="dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalValue">ZMW 0.00</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="activity"></i>
+                            <span>Inventory worth</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="alert-triangle" class="label-icon"></i>
+                                Low Stock
+                            </div>
+                            <div class="stat-card-icon warning">
+                                <i data-lucide="alert-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="lowStockItems">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="package-x"></i>
+                            <span>Need restocking</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="trending-up" class="label-icon"></i>
+                                Potential Profit
+                            </div>
+                            <div class="stat-card-icon info">
+                                <i data-lucide="bar-chart"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="potentialProfit">ZMW 0.00</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="arrow-up"></i>
+                            <span>If all sold</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Inventory Table -->
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title">
+                            <i data-lucide="package"></i>
+                            Inventory Management
+                        </h2>
+                        <button class="action-btn" onclick="showAddItemModal()">
+                            <i data-lucide="plus"></i>
+                            Add Item
+                        </button>
+                    </div>
+                    <div class="content-card-body">
+                        <div class="search-filter-bar">
+                            <div class="search-box">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" id="searchInventory" placeholder="Search products...">
+                            </div>
+                            <select id="filterStock" class="filter-select">
+                                <option value="all">All Items</option>
+                                <option value="low">Low Stock</option>
+                                <option value="instock">In Stock</option>
+                            </select>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th><i data-lucide="package" style="width: 14px; height: 14px; display: inline;"></i> Product Name</th>
+                                        <th><i data-lucide="layers" style="width: 14px; height: 14px; display: inline;"></i> Quantity</th>
+                                        <th><i data-lucide="arrow-down" style="width: 14px; height: 14px; display: inline;"></i> Buying Price/Item</th>
+                                        <th><i data-lucide="arrow-up" style="width: 14px; height: 14px; display: inline;"></i> Selling Price/Item</th>
+                                        <th><i data-lucide="dollar-sign" style="width: 14px; height: 14px; display: inline;"></i> Sales Amount</th>
+                                        <th><i data-lucide="trending-up" style="width: 14px; height: 14px; display: inline;"></i> Net Profit</th>
+                                        <th><i data-lucide="settings" style="width: 14px; height: 14px; display: inline;"></i> Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventoryTableBody">
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination-container" id="inventoryPagination" style="display: none;">
+                            <div class="pagination-info">
+                                Showing <span id="inventoryShowingStart">0</span> to <span id="inventoryShowingEnd">0</span> of <span id="inventoryTotal">0</span> items
+                            </div>
+                            <div class="pagination-controls">
+                                <select class="pagination-select" id="inventoryPageSize" onchange="changeInventoryPageSize()">
+                                    <option value="10">10 per page</option>
+                                    <option value="25" selected>25 per page</option>
+                                    <option value="50">50 per page</option>
+                                    <option value="100">100 per page</option>
+                                </select>
+                                <button class="pagination-btn" onclick="changeInventoryPage('first')" id="inventoryFirstBtn">
+                                    <i data-lucide="chevrons-left"></i>
+                                </button>
+                                <button class="pagination-btn" onclick="changeInventoryPage('prev')" id="inventoryPrevBtn">
+                                    <i data-lucide="chevron-left"></i>
+                                </button>
+                                <span class="pagination-info">Page <span id="inventoryCurrentPage">1</span> of <span id="inventoryTotalPages">1</span></span>
+                                <button class="pagination-btn" onclick="changeInventoryPage('next')" id="inventoryNextBtn">
+                                    <i data-lucide="chevron-right"></i>
+                                </button>
+                                <button class="pagination-btn" onclick="changeInventoryPage('last')" id="inventoryLastBtn">
+                                    <i data-lucide="chevrons-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="emptyInventory" class="empty-state" style="display: none;">
+                            <i data-lucide="package-x" class="empty-state-icon"></i>
+                            <h3 class="empty-state-title">No Items in Inventory</h3>
+                            <p class="empty-state-message">Start by adding your first product to the inventory</p>
+                            <button class="action-btn" onclick="showAddItemModal()">
+                                <i data-lucide="plus"></i>
+                                Add First Item
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Item Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i data-lucide="package-plus" class="title-icon"></i>
+                    <span id="modalTitle">Add Item</span>
+                </h2>
+                <button onclick="closeItemModal()" class="modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="itemForm" class="modal-form">
+                <input type="hidden" id="itemId">
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="tag" class="label-icon"></i>
+                        Product Name
+                    </label>
+                    <input type="text" id="itemName" class="form-input" placeholder="Enter product name" required maxlength="200">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="layers" class="label-icon"></i>
+                        Quantity
+                    </label>
+                    <input type="number" id="itemQuantity" class="form-input" placeholder="Enter quantity" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="arrow-down-circle" class="label-icon"></i>
+                        Buying Price Per Item (ZMW)
+                    </label>
+                    <input type="number" id="itemBuyingPrice" class="form-input" placeholder="Enter buying price per item" step="0.01" min="0" required oninput="calculateProfits()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="arrow-up-circle" class="label-icon"></i>
+                        Selling Price Per Item (ZMW)
+                    </label>
+                    <input type="number" id="itemSellingPrice" class="form-input" placeholder="Enter selling price per item" step="0.01" min="0" required oninput="calculateProfits()">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="trending-up" class="label-icon"></i>
+                        Profit Per Item (ZMW)
+                    </label>
+                    <input type="text" id="profitPerItem" class="form-input" readonly style="background: var(--bg-hover); font-weight: 700; color: var(--color-success);">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="bar-chart" class="label-icon"></i>
+                        Net Profit (ZMW)
+                    </label>
+                    <input type="text" id="netProfit" class="form-input" readonly style="background: var(--bg-hover); font-weight: 700; color: var(--color-success);">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="alert-triangle" class="label-icon"></i>
+                        Low Stock Threshold
+                    </label>
+                    <input type="number" id="lowStockThreshold" class="form-input" placeholder="Enter low stock alert level" min="0" value="10" required>
+                    <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 4px;">Alert when stock falls below this number</small>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="check" class="btn-icon"></i>
+                    <span id="submitBtnText">Add Item</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        if (!AppData.user || !isLoggedIn()) window.location.href = '../index.html';
+        
+        // Use global editingItemId from main.js
+        const isWorker = AppData.user && AppData.user.role === 'worker';
+        
+        // Hide add/edit/delete buttons for workers
+        if (isWorker) {
+            document.addEventListener('DOMContentLoaded', () => {
+                // Hide add button
+                const addBtn = document.querySelector('.action-btn[onclick="showAddItemModal()"]');
+                if (addBtn) addBtn.style.display = 'none';
+            });
+        }
+        
+        function calculateProfits() {
+            const quantity = parseFloat(document.getElementById('itemQuantity').value) || 0;
+            const buyingPrice = parseFloat(document.getElementById('itemBuyingPrice').value) || 0;
+            const sellingPrice = parseFloat(document.getElementById('itemSellingPrice').value) || 0;
+            
+            const profitPerItem = sellingPrice - buyingPrice;
+            const netProfit = profitPerItem * quantity;
+            
+            document.getElementById('profitPerItem').value = formatCurrency(profitPerItem);
+            document.getElementById('netProfit').value = formatCurrency(netProfit);
+        }
+        
+        // Use global inventory variables from main.js
+        
+        function loadInventoryTable() {
+            const tbody = document.getElementById('inventoryTableBody');
+            const emptyState = document.getElementById('emptyInventory');
+            const paginationContainer = document.getElementById('inventoryPagination');
+            const searchTerm = document.getElementById('searchInventory').value.toLowerCase();
+            const filterValue = document.getElementById('filterStock').value;
+            
+            inventoryFilteredItems = AppData.inventory.filter(item => {
+                const threshold = item.lowStockThreshold || AppData.settings.lowStockThreshold;
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesFilter = filterValue === 'all' || 
+                    (filterValue === 'low' && item.quantity <= threshold) ||
+                    (filterValue === 'instock' && item.quantity > threshold);
+                return matchesSearch && matchesFilter;
+            });
+            
+            if (inventoryFilteredItems.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'flex';
+                paginationContainer.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                
+                // Calculate pagination
+                const totalPages = Math.ceil(inventoryFilteredItems.length / inventoryPageSize);
+                if (inventoryCurrentPage > totalPages) inventoryCurrentPage = totalPages;
+                if (inventoryCurrentPage < 1) inventoryCurrentPage = 1;
+                
+                const startIndex = (inventoryCurrentPage - 1) * inventoryPageSize;
+                const endIndex = Math.min(startIndex + inventoryPageSize, inventoryFilteredItems.length);
+                const pageItems = inventoryFilteredItems.slice(startIndex, endIndex);
+                
+                tbody.innerHTML = pageItems.map(item => {
+                    const salesAmount = item.sellingPrice * item.quantity;
+                    const threshold = item.lowStockThreshold || AppData.settings.lowStockThreshold;
+                    const isLowStock = item.quantity <= threshold;
+                    
+                    // Hide action buttons for workers
+                    const actionButtons = isWorker ? '' : `
+                        <div class="table-actions">
+                            <button class="table-btn edit" onclick="editItem('${item.id}')" title="Edit">
+                                <i data-lucide="edit-2"></i>
+                            </button>
+                            <button class="table-btn delete" onclick="deleteItem('${item.id}')" title="Delete">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    return `
+                    <tr>
+                        <td style="font-weight: 600;">${item.name}</td>
+                        <td>
+                            ${isLowStock ? 
+                                `<span class="badge warning">${item.quantity}</span>` : 
+                                `<span class="badge success">${item.quantity}</span>`
+                            }
+                        </td>
+                        <td>${formatCurrency(item.buyingPrice)}</td>
+                        <td>${formatCurrency(item.sellingPrice)}</td>
+                        <td style="color: var(--color-info); font-weight: 600;">${formatCurrency(salesAmount)}</td>
+                        <td style="color: var(--color-success); font-weight: 600;">${formatCurrency(item.netProfit)}</td>
+                        <td>${actionButtons}</td>
+                    </tr>
+                `;
+                }).join('');
+                
+                // Update pagination UI
+                if (inventoryFilteredItems.length > inventoryPageSize) {
+                    paginationContainer.style.display = 'flex';
+                    document.getElementById('inventoryShowingStart').textContent = startIndex + 1;
+                    document.getElementById('inventoryShowingEnd').textContent = endIndex;
+                    document.getElementById('inventoryTotal').textContent = inventoryFilteredItems.length;
+                    document.getElementById('inventoryCurrentPage').textContent = inventoryCurrentPage;
+                    document.getElementById('inventoryTotalPages').textContent = totalPages;
+                    
+                    document.getElementById('inventoryFirstBtn').disabled = inventoryCurrentPage === 1;
+                    document.getElementById('inventoryPrevBtn').disabled = inventoryCurrentPage === 1;
+                    document.getElementById('inventoryNextBtn').disabled = inventoryCurrentPage === totalPages;
+                    document.getElementById('inventoryLastBtn').disabled = inventoryCurrentPage === totalPages;
+                } else {
+                    paginationContainer.style.display = 'none';
+                }
+            }
+            lucide.createIcons();
+        }
+        
+        function changeInventoryPage(action) {
+            const totalPages = Math.ceil(inventoryFilteredItems.length / inventoryPageSize);
+            
+            switch(action) {
+                case 'first':
+                    inventoryCurrentPage = 1;
+                    break;
+                case 'prev':
+                    if (inventoryCurrentPage > 1) inventoryCurrentPage--;
+                    break;
+                case 'next':
+                    if (inventoryCurrentPage < totalPages) inventoryCurrentPage++;
+                    break;
+                case 'last':
+                    inventoryCurrentPage = totalPages;
+                    break;
+            }
+            
+            loadInventoryTable();
+        }
+        
+        function changeInventoryPageSize() {
+            inventoryPageSize = parseInt(document.getElementById('inventoryPageSize').value);
+            inventoryCurrentPage = 1;
+            loadInventoryTable();
+        }
+        
+                
+                
+        const itemForm = document.getElementById('itemForm');
+        if (itemForm) {
+            itemForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const itemData = {
+                    name: document.getElementById('itemName').value,
+                    quantity: document.getElementById('itemQuantity').value,
+                    buyingPrice: document.getElementById('itemBuyingPrice').value,
+                    sellingPrice: document.getElementById('itemSellingPrice').value,
+                    lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value) || 10
+                };
+                
+                if (parseFloat(itemData.sellingPrice) < parseFloat(itemData.buyingPrice)) {
+                    showToast('Selling price cannot be less than buying price', 'warning');
+                    return;
+                }
+                
+                let result;
+                if (editingItemId) {
+                    result = updateInventoryItem(editingItemId, itemData);
+                } else {
+                    result = addInventoryItem(itemData);
+                }
+                
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    closeItemModal();
+                    loadInventoryData();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            });
+        }
+        
+        const searchInventory = document.getElementById('searchInventory');
+        if (searchInventory) {
+            searchInventory.addEventListener('input', () => {
+                inventoryCurrentPage = 1;
+                loadInventoryTable();
+            });
+        }
+        const filterStock = document.getElementById('filterStock');
+        if (filterStock) {
+            filterStock.addEventListener('change', () => {
+                inventoryCurrentPage = 1;
+                loadInventoryTable();
+            });
+        }
+        
+        // Initialize inventory service listeners
+        if (window.InventoryService) {
+            // Listen for inventory changes to update UI
+            window.InventoryService.addListener((action, data) => {
+                if (window.location.pathname.includes('Inventory.html')) {
+                    // Reload inventory data when changes occur
+                    setTimeout(() => {
+                        if (typeof loadInventoryData === 'function') {
+                            loadInventoryData();
+                        }
+                    }, 100);
+                }
+            });
+        }
+        
+        loadInventoryData();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+>>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad

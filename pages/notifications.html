@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,3 +114,120 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Notifications - POS System</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    
+
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            <div class="content-wrapper">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title">
+                            <span class="unicode-icon">🔔</span>
+                            Notifications
+                        </h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div id="notificationsList" class="notifications-list"></div>
+                        <div id="emptyNotifications" class="empty-state" style="display: none;">
+                            <span class="unicode-icon" style="font-size: 48px;">🔕</span>
+                            <h3 class="empty-state-title">No Notifications</h3>
+                            <p class="empty-state-message">You're all caught up!</p>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div id="paginationContainer" style="display: none; margin-top: var(--spacing-lg); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-md);">
+                            <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+                                Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalItems">0</span> notifications
+                            </div>
+                            <div style="display: flex; gap: var(--spacing-xs); flex-wrap: wrap;">
+                                <button id="prevPage" class="action-btn secondary" style="padding: 0.5rem 1rem;" onclick="changePage(-1)">
+                                    <span class="unicode-icon">◀</span>
+                                    Previous
+                                </button>
+                                <div id="pageNumbers" style="display: flex; gap: var(--spacing-xs); flex-wrap: wrap;"></div>
+                                <button id="nextPage" class="action-btn secondary" style="padding: 0.5rem 1rem;" onclick="changePage(1)">
+                                    Next
+                                    <span class="unicode-icon">▶</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+    
+    <!-- Scripts in correct order -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    
+    <script>
+        // Notification page initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔔 Notifications page loaded');
+            
+            // Authentication check
+            if (typeof AppData === 'undefined' || !AppData.user || !isLoggedIn()) {
+                console.log('❌ User not authenticated, redirecting to login');
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            if (AppData.user.role === 'worker') {
+                console.log('❌ Worker role cannot access notifications');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            console.log('✅ User authenticated, loading notifications');
+            
+            // Wait for components to load
+            function waitForComponents() {
+                const sidebar = document.getElementById('sidebar');
+                const topbar = document.querySelector('.topbar');
+                
+                if (sidebar && topbar) {
+                    console.log('✅ Components loaded');
+                    if (typeof loadNotifications === 'function') {
+                        loadNotifications();
+                    }
+                } else {
+                    setTimeout(waitForComponents, 200);
+                }
+            }
+            
+            waitForComponents();
+        });
+    </script>
+</body>
+</html>
+>>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad

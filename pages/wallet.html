@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,3 +132,138 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Wallet - POS System</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            <div class="content-wrapper">
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <i data-lucide="wallet"></i>
+                    </div>
+                    <div class="wallet-balance-label">Available Balance</div>
+                    <div class="wallet-balance-amount" id="walletBalance">ZMW 0.00</div>
+                    <div class="wallet-actions">
+                        <button class="btn-primary" onclick="showTopUpModal()"><i data-lucide="arrow-down-circle"></i>Top Up</button>
+                        <button class="btn-secondary" onclick="showWithdrawModal()"><i data-lucide="arrow-up-circle"></i>Withdraw</button>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title"><i data-lucide="history"></i>Transaction History</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div id="transactionList" class="transaction-list"></div>
+                        <div id="emptyTransactions" class="empty-state" style="display: none;">
+                            <i data-lucide="wallet" class="empty-state-icon"></i>
+                            <h3 class="empty-state-title">No Transactions</h3>
+                            <p class="empty-state-message">Your wallet transactions will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="topUpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i data-lucide="arrow-down-circle" class="title-icon"></i>Top Up Wallet</h2>
+                <button onclick="closeTopUpModal()" class="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="topUpForm" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label"><i data-lucide="dollar-sign" class="label-icon"></i>Amount (ZMW)</label>
+                    <input type="number" id="topUpAmount" class="form-input" placeholder="Enter amount to add" step="0.01" min="0" required>
+                </div>
+                <button type="submit" class="btn-primary"><i data-lucide="check" class="btn-icon"></i>Top Up</button>
+            </form>
+        </div>
+    </div>
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i data-lucide="arrow-up-circle" class="title-icon"></i>Withdraw Funds</h2>
+                <button onclick="closeWithdrawModal()" class="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="withdrawForm" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label"><i data-lucide="dollar-sign" class="label-icon"></i>Amount (ZMW)</label>
+                    <input type="number" id="withdrawAmount" class="form-input" placeholder="Enter amount to withdraw" step="0.01" min="0" required>
+                </div>
+                <button type="submit" class="btn-primary"><i data-lucide="check" class="btn-icon"></i>Withdraw</button>
+            </form>
+        </div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        if (!AppData.user || !isLoggedIn()) window.location.href = '../index.html';
+        
+        // Workers cannot access wallet (admin only)
+        if (AppData.user.role === 'worker') {
+            window.location.href = 'dashboard.html';
+        }
+        
+                        const topUpForm = document.getElementById('topUpForm');
+        if (topUpForm) {
+            topUpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const result = topUpWallet(document.getElementById('topUpAmount').value);
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    closeTopUpModal();
+                    loadWalletData();
+            } else {
+                showToast(result.message, 'error');
+            }
+        });
+        }
+        const withdrawForm = document.getElementById('withdrawForm');
+        if (withdrawForm) {
+            withdrawForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const result = withdrawFromWallet(document.getElementById('withdrawAmount').value);
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    closeWithdrawModal();
+                    loadWalletData();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            });
+        }
+        loadWalletData();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+>>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad

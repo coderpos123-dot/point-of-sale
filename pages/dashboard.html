@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -280,3 +281,287 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Dashboard - International Dealers ZM</title>
+    <meta name="description" content="Complete Point of Sale System with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            
+            <div class="content-wrapper">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="trending-up" class="label-icon"></i>
+                                Total Sales
+                            </div>
+                            <div class="stat-card-icon success">
+                                <i data-lucide="shopping-bag"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalSalesValue">ZMW 0.00</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="arrow-up"></i>
+                            <span id="totalSalesCount">0 transactions</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="package" class="label-icon"></i>
+                                Inventory Value
+                            </div>
+                            <div class="stat-card-icon primary">
+                                <i data-lucide="box"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="inventoryValue">ZMW 0.00</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="package"></i>
+                            <span id="inventoryCount">0 items</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="wallet" class="label-icon"></i>
+                                Wallet Balance
+                            </div>
+                            <div class="stat-card-icon info">
+                                <i data-lucide="credit-card"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="walletBalance">ZMW 0.00</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="activity"></i>
+                            <span>Available funds</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="alert-triangle" class="label-icon"></i>
+                                Low Stock Alert
+                            </div>
+                            <div class="stat-card-icon warning">
+                                <i data-lucide="alert-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="lowStockCount">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="package-x"></i>
+                            <span>Items need restocking</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Daily Sales Chart -->
+                <div class="content-card" style="margin-bottom: var(--spacing-xl);">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title">
+                            <i data-lucide="bar-chart-3"></i>
+                            Today's Sales Overview
+                        </h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div class="daily-sales-stats">
+                            <div class="daily-stat">
+                                <div class="daily-stat-icon success">
+                                    <i data-lucide="dollar-sign"></i>
+                                </div>
+                                <div class="daily-stat-content">
+                                    <div class="daily-stat-label">Total Revenue</div>
+                                    <div class="daily-stat-value" id="dailyRevenue">ZMW 0.00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="daily-stat">
+                                <div class="daily-stat-icon primary">
+                                    <i data-lucide="shopping-cart"></i>
+                                </div>
+                                <div class="daily-stat-content">
+                                    <div class="daily-stat-label">Transactions</div>
+                                    <div class="daily-stat-value" id="dailyTransactions">0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="daily-stat">
+                                <div class="daily-stat-icon info">
+                                    <i data-lucide="trending-up"></i>
+                                </div>
+                                <div class="daily-stat-content">
+                                    <div class="daily-stat-label">Profit</div>
+                                    <div class="daily-stat-value" id="dailyProfit">ZMW 0.00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="daily-stat">
+                                <div class="daily-stat-icon warning">
+                                    <i data-lucide="receipt"></i>
+                                </div>
+                                <div class="daily-stat-content">
+                                    <div class="daily-stat-label">Expenses</div>
+                                    <div class="daily-stat-value" id="dailyExpenses">ZMW 0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title">
+                            <i data-lucide="zap"></i>
+                            Quick Actions
+                        </h2>
+                    </div>
+                    <div class="content-card-body">
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="window.location.href='sales.html'">
+                                <i data-lucide="shopping-cart"></i>
+                                New Sale
+                            </button>
+                            
+                            <button class="action-btn success" onclick="window.location.href='Inventory.html'">
+                                <i data-lucide="package-plus"></i>
+                                Add Inventory
+                            </button>
+                            
+                            <button class="action-btn secondary" onclick="window.location.href='expenses.html'">
+                                <i data-lucide="receipt"></i>
+                                Record Expense
+                            </button>
+                            
+                            <button class="action-btn secondary" onclick="window.location.href='reports.html'">
+                                <i data-lucide="file-text"></i>
+                                View Reports
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        // Dashboard initialization - simplified to avoid conflicts
+        function initializeDashboard() {
+            // Check authentication first
+            if (!AppData.user || !isLoggedIn()) {
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            console.log('Initializing dashboard...');
+            
+            // Load dashboard data immediately
+            loadDashboardData();
+            
+            // Refresh data every 30 seconds
+            setInterval(loadDashboardData, 30000);
+            
+            // Check for daily sales reset every minute
+            setInterval(() => {
+                if (typeof checkAndResetDailySales === 'function') {
+                    const oldDate = AppData.dailySales.date;
+                    checkAndResetDailySales();
+                    // If date changed, reload dashboard data
+                    if (oldDate !== AppData.dailySales.date) {
+                        loadDashboardData();
+                    }
+                }
+            }, 60000);
+        }
+        
+        // Load dashboard data
+        function loadDashboardData() {
+            if (typeof getDashboardStats !== 'function') {
+                console.error('getDashboardStats function not available');
+                return;
+            }
+            
+            const stats = getDashboardStats();
+            
+            // Update stats cards safely
+            const updateElement = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            };
+            
+            updateElement('totalSalesValue', formatCurrency(stats.dailySales.total));
+            updateElement('totalSalesCount', `${stats.totalSales} transactions`);
+            updateElement('inventoryValue', formatCurrency(stats.totalInventoryValue));
+            updateElement('inventoryCount', `${AppData.inventory.length} items`);
+            updateElement('walletBalance', formatCurrency(stats.walletBalance));
+            updateElement('lowStockCount', stats.lowStockCount);
+            updateElement('dailyRevenue', formatCurrency(stats.dailySales.total));
+            updateElement('dailyTransactions', stats.dailySales.count);
+            updateElement('dailyProfit', formatCurrency(stats.dailySales.profit));
+            updateElement('dailyExpenses', formatCurrency(stats.totalExpenses));
+        }
+        
+        // Wait for components to load, then initialize dashboard with reduced delay
+        function waitForComponentsAndInit() {
+            const checkComponents = () => {
+                const sidebar = document.getElementById('sidebar');
+                const topbar = document.querySelector('.topbar');
+                
+                if (sidebar && topbar) {
+                    console.log('Components found, initializing dashboard');
+                    initializeDashboard();
+                } else {
+                    console.log('Waiting for components...');
+                    setTimeout(checkComponents, 50); // Reduced from 100ms to 50ms
+                }
+            };
+            
+            checkComponents();
+        }
+        
+        // Start initialization immediately - no delay
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', waitForComponentsAndInit);
+        } else {
+            waitForComponentsAndInit();
+        }
+    </script>
+</body>
+</html>
+>>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad

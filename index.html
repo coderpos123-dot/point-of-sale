@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -508,4 +509,509 @@
         });
     </script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="International Dealers ZM">
+    <title>International Dealers ZM - POS System</title>
+    <meta name="description" content="Professional Point of Sale System by International Dealers ZM with offline support">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/IDZ-logo.png">
+    <link rel="apple-touch-icon" href="/IDZ-logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/pwa-icons/icon-192x192.png">
+    <link rel="apple-touch-startup-image" href="/assets/icons/pwa-icons/icon-512x512.png">
+    <!-- Centralized theme system - NO hardcoded theme logic -->
+    <script src="assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css?v=8.2">
+</head>
+<body class="login-body">
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <i id="themeIcon" data-lucide="moon"></i>
+    </button>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Left Side - Features (Desktop Only) -->
+            <div class="login-left">
+                <div class="login-left-content">
+                    <div class="logo-section">
+                        <img src="/IDZ-logo.png" alt="International Dealers ZM" class="logo" onerror="this.style.display='none'">
+                        <h1 class="company-name">International Dealers ZM</h1>
+                    </div>
+                    
+                    <div class="features-list">
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i data-lucide="package"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Inventory Management</h3>
+                                <p>Track stock levels in real-time</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i data-lucide="shopping-cart"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Sales Tracking</h3>
+                                <p>Monitor sales and revenue</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i data-lucide="bar-chart"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Analytics & Reports</h3>
+                                <p>Generate detailed insights</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i data-lucide="wifi-off"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h3>Offline Support</h3>
+                                <p>Works without internet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Side - Login Form -->
+            <div class="login-right">
+                <div class="login-form-container">
+                    <!-- Mobile Logo (Mobile Only) -->
+                    <div class="mobile-logo">
+                        <img src="/IDZ-logo.png" alt="International Dealers ZM" class="logo-mobile" onerror="this.style.display='none'">
+                        <h1 class="company-name-mobile">International Dealers ZM</h1>
+                    </div>
+                    
+                    <div class="login-header">
+                        <div class="user-avatar">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <h2 class="login-title">Welcome Back</h2>
+                        <p class="login-subtitle">Sign in to your account</p>
+                    </div>
+                    
+                    <form id="loginForm" class="login-form">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i data-lucide="mail" class="label-icon"></i>
+                                Email Address
+                            </label>
+                            <input 
+                                type="email" 
+                                id="loginEmail" 
+                                class="form-input" 
+                                placeholder="Enter your email address"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i data-lucide="lock" class="label-icon"></i>
+                                Password
+                            </label>
+                            <input 
+                                type="password" 
+                                id="loginPassword" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                        </div>
+                        
+                        <a href="#" id="forgotPasswordLink" class="forgot-link">
+                            <i data-lucide="help-circle" class="link-icon"></i>
+                            Forgot Password?
+                        </a>
+                        
+                        <button type="submit" class="btn-primary">
+                            <i data-lucide="log-in" class="btn-icon"></i>
+                            Sign In
+                        </button>
+                    </form>
+                    
+                    <div id="signupSection" class="signup-section">
+                        <p class="signup-text">Don't have an account?</p>
+                        <button id="showSignupBtn" class="btn-secondary">
+                            <i data-lucide="user-plus" class="btn-icon"></i>
+                            Create Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i data-lucide="user-plus" class="title-icon"></i>
+                    Create Account
+                </h2>
+                <button id="closeSignupModal" class="modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="signupForm" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="user" class="label-icon"></i>
+                        Full Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="signupName" 
+                        class="form-input" 
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="mail" class="label-icon"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="signupEmail" 
+                        class="form-input" 
+                        placeholder="Enter your email address"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="cake" class="label-icon"></i>
+                        Date of Birth
+                    </label>
+                    <input 
+                        type="date" 
+                        id="signupDOB" 
+                        class="form-input"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="lock" class="label-icon"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="signupPassword" 
+                        class="form-input" 
+                        placeholder="Create a strong password"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="help-circle" class="label-icon"></i>
+                        Security Question
+                    </label>
+                    <select id="securityQuestion" class="form-input" required>
+                        <option value="">Select a security question</option>
+                        <option value="pet">What is your pet's name?</option>
+                        <option value="city">What city were you born in?</option>
+                        <option value="school">What is your mother's maiden name?</option>
+                        <option value="teacher">What was your first teacher's name?</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="key" class="label-icon"></i>
+                        Security Answer
+                    </label>
+                    <input 
+                        type="text" 
+                        id="securityAnswer" 
+                        class="form-input" 
+                        placeholder="Enter your answer"
+                        required
+                    >
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="check" class="btn-icon"></i>
+                    Create Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i data-lucide="help-circle" class="title-icon"></i>
+                    Reset Password
+                </h2>
+                <button id="closeForgotModal" class="modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="forgotPasswordForm" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="mail" class="label-icon"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="forgotEmail" 
+                        class="form-input" 
+                        placeholder="Enter your email address"
+                        required
+                    >
+                </div>
+                
+                <div id="securityQuestionSection" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i data-lucide="help-circle" class="label-icon"></i>
+                            Security Question
+                        </label>
+                        <p id="displaySecurityQuestion" class="security-question-text"></p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i data-lucide="key" class="label-icon"></i>
+                            Your Answer
+                        </label>
+                        <input 
+                            type="text" 
+                            id="forgotSecurityAnswer" 
+                            class="form-input" 
+                            placeholder="Enter your answer"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i data-lucide="lock" class="label-icon"></i>
+                            New Password
+                        </label>
+                        <input 
+                            type="password" 
+                            id="newPassword" 
+                            class="form-input" 
+                            placeholder="Enter new password"
+                        >
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="check" class="btn-icon"></i>
+                    <span id="forgotBtnText">Continue</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="assets/js/notification-service.js"></script>
+    <script src="assets/js/router-service.js"></script>
+    <script src="assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="assets/js/main.js?v=8.2"></script>
+    <script src="assets/js/theme_toggle.js?v=8.2"></script>
+    <script src="assets/js/pwa.js?v=8.2"></script>
+    <script>
+        // Login page logic
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = login(email, password);
+            if (result.success) {
+                showToast('Login successful!', 'success');
+                setTimeout(() => window.location.href = 'pages/dashboard.html', 500);
+            } else {
+                showToast(result.message, 'error');
+            }
+        });
+        
+        // Signup modal
+        document.getElementById('showSignupBtn').addEventListener('click', () => {
+            document.getElementById('signupModal').classList.add('active');
+        });
+        
+        document.getElementById('closeSignupModal').addEventListener('click', () => {
+            document.getElementById('signupModal').classList.remove('active');
+        });
+        
+        document.getElementById('signupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userData = {
+                name: document.getElementById('signupName').value,
+                email: document.getElementById('signupEmail').value,
+                dateOfBirth: document.getElementById('signupDOB').value,
+                password: document.getElementById('signupPassword').value,
+                securityQuestion: document.getElementById('securityQuestion').value,
+                securityAnswer: document.getElementById('securityAnswer').value
+            };
+            
+            const result = createAccount(userData);
+            if (result.success) {
+                showToast(result.message, 'success');
+                document.getElementById('signupModal').classList.remove('active');
+                document.getElementById('signupForm').reset();
+            } else {
+                showToast(result.message, 'error');
+            }
+        });
+        
+        // Forgot password
+        document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('forgotPasswordModal').classList.add('active');
+        });
+        
+        document.getElementById('closeForgotModal').addEventListener('click', () => {
+            document.getElementById('forgotPasswordModal').classList.remove('active');
+            document.getElementById('forgotPasswordForm').reset();
+            document.getElementById('securityQuestionSection').style.display = 'none';
+            document.getElementById('forgotBtnText').textContent = 'Continue';
+        });
+        
+        // Forgot password form handler
+        let forgotPasswordUser = null;
+        document.getElementById('forgotPasswordForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value;
+            const securitySection = document.getElementById('securityQuestionSection');
+            
+            // Step 1: Check email and show security question
+            if (securitySection.style.display === 'none') {
+                // Find user by email
+                if (AppData.user && AppData.user.email === email) {
+                    forgotPasswordUser = AppData.user;
+                } else {
+                    forgotPasswordUser = AppData.users.find(u => u.email === email);
+                }
+                
+                if (!forgotPasswordUser) {
+                    showToast('Email not found', 'error');
+                    return;
+                }
+                
+                if (!forgotPasswordUser.securityQuestion || !forgotPasswordUser.securityAnswer) {
+                    showToast('No security question set for this account', 'error');
+                    return;
+                }
+                
+                // Show security question
+                const questions = {
+                    'pet': 'What is your pet\'s name?',
+                    'city': 'What city were you born in?',
+                    'school': 'What is your mother\'s maiden name?',
+                    'teacher': 'What was your first teacher\'s name?'
+                };
+                
+                document.getElementById('displaySecurityQuestion').textContent = 
+                    questions[forgotPasswordUser.securityQuestion] || forgotPasswordUser.securityQuestion;
+                securitySection.style.display = 'block';
+                document.getElementById('forgotBtnText').textContent = 'Reset Password';
+                
+            } else {
+                // Step 2: Verify answer and reset password
+                const answer = document.getElementById('forgotSecurityAnswer').value.trim().toLowerCase();
+                const newPassword = document.getElementById('newPassword').value;
+                
+                if (!answer || !newPassword) {
+                    showToast('Please fill in all fields', 'error');
+                    return;
+                }
+                
+                if (answer !== forgotPasswordUser.securityAnswer.toLowerCase()) {
+                    showToast('Incorrect security answer', 'error');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    showToast('Password must be at least 6 characters', 'error');
+                    return;
+                }
+                
+                // Update password
+                forgotPasswordUser.password = newPassword;
+                saveData();
+                
+                showToast('Password reset successfully! You can now login.', 'success');
+                document.getElementById('forgotPasswordModal').classList.remove('active');
+                document.getElementById('forgotPasswordForm').reset();
+                securitySection.style.display = 'none';
+                document.getElementById('forgotBtnText').textContent = 'Continue';
+                forgotPasswordUser = null;
+            }
+        });
+        
+        // Close modals on backdrop click
+        document.getElementById('signupModal').addEventListener('click', (e) => {
+            if (e.target.id === 'signupModal') {
+                document.getElementById('signupModal').classList.remove('active');
+            }
+        });
+        
+        document.getElementById('forgotPasswordModal').addEventListener('click', (e) => {
+            if (e.target.id === 'forgotPasswordModal') {
+                document.getElementById('forgotPasswordModal').classList.remove('active');
+                document.getElementById('forgotPasswordForm').reset();
+                document.getElementById('securityQuestionSection').style.display = 'none';
+                document.getElementById('forgotBtnText').textContent = 'Continue';
+            }
+        });
+        
+        // Initialize icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
+        // Log that page is ready
+        console.log('✅ Login page initialized');
+        console.log('✅ Functions available:', {
+            login: typeof login,
+            createAccount: typeof createAccount,
+            showToast: typeof showToast,
+            AppData: typeof AppData
+        });
+    </script>
+</body>
+>>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad
 </html>

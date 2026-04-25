@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -520,3 +521,527 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Manage Users - International Dealers ZM</title>
+    <meta name="description" content="User Management System">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/png" href="../IDZ-logo.png">
+    <link rel="apple-touch-icon" href="../IDZ-logo.png">
+    <script>
+        <!-- Centralized theme system - NO hardcoded theme logic -->
+        <script src="../assets/js/theme_toggle.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@0.294.0/font/lucide.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+        
+        <div class="main-content">
+            <div id="topbarContainer"></div>
+            
+            <div class="content-wrapper">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="users" class="label-icon"></i>
+                                Total Users
+                            </div>
+                            <div class="stat-card-icon primary">
+                                <i data-lucide="users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalUsers">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="user-check"></i>
+                            <span>System users</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="shield" class="label-icon"></i>
+                                Admins
+                            </div>
+                            <div class="stat-card-icon success">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalAdmins">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="crown"></i>
+                            <span>Admin accounts</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="briefcase" class="label-icon"></i>
+                                Workers
+                            </div>
+                            <div class="stat-card-icon info">
+                                <i data-lucide="user"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="totalWorkers">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="users"></i>
+                            <span>Worker accounts</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">
+                                <i data-lucide="activity" class="label-icon"></i>
+                                Active Users
+                            </div>
+                            <div class="stat-card-icon warning">
+                                <i data-lucide="zap"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="activeUsers">0</div>
+                        <div class="stat-card-change">
+                            <i data-lucide="check-circle"></i>
+                            <span>Currently active</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Users Table -->
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2 class="content-card-title">
+                            <i data-lucide="users"></i>
+                            User Management
+                        </h2>
+                        <button class="action-btn" id="btnAddUser">
+                            <i data-lucide="user-plus"></i>
+                            Add User
+                        </button>
+                    </div>
+                    <div class="content-card-body">
+                        <div class="search-filter-bar">
+                            <div class="search-box">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" id="searchUsers" placeholder="Search users by name or email...">
+                            </div>
+                            <select id="filterRole" class="filter-select">
+                                <option value="all">All Roles</option>
+                                <option value="admin">Admin</option>
+                                <option value="worker">Worker</option>
+                            </select>
+                            <select id="filterStatus" class="filter-select">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th><i data-lucide="user" style="width: 14px; height: 14px; display: inline;"></i> Name</th>
+                                        <th><i data-lucide="mail" style="width: 14px; height: 14px; display: inline;"></i> Email</th>
+                                        <th><i data-lucide="phone" style="width: 14px; height: 14px; display: inline;"></i> Contact</th>
+                                        <th><i data-lucide="shield" style="width: 14px; height: 14px; display: inline;"></i> Role</th>
+                                        <th><i data-lucide="activity" style="width: 14px; height: 14px; display: inline;"></i> Status</th>
+                                        <th><i data-lucide="settings" style="width: 14px; height: 14px; display: inline;"></i> Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination-container" id="usersPagination" style="display: none;">
+                            <div class="pagination-info">
+                                Showing <span id="usersShowingStart">0</span> to <span id="usersShowingEnd">0</span> of <span id="usersTotal">0</span> users
+                            </div>
+                            <div class="pagination-controls">
+                                <select class="pagination-select" id="usersPageSize" onchange="changeUsersPageSize()">
+                                    <option value="10">10 per page</option>
+                                    <option value="25" selected>25 per page</option>
+                                    <option value="50">50 per page</option>
+                                    <option value="100">100 per page</option>
+                                </select>
+                                <button class="pagination-btn" onclick="changeUsersPage('first')" id="usersFirstBtn">
+                                    <i data-lucide="chevrons-left"></i>
+                                </button>
+                                <button class="pagination-btn" onclick="changeUsersPage('prev')" id="usersPrevBtn">
+                                    <i data-lucide="chevron-left"></i>
+                                </button>
+                                <span class="pagination-info">Page <span id="usersCurrentPage">1</span> of <span id="usersTotalPages">1</span></span>
+                                <button class="pagination-btn" onclick="changeUsersPage('next')" id="usersNextBtn">
+                                    <i data-lucide="chevron-right"></i>
+                                </button>
+                                <button class="pagination-btn" onclick="changeUsersPage('last')" id="usersLastBtn">
+                                    <i data-lucide="chevrons-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="emptyUsers" class="empty-state" style="display: none;">
+                            <i data-lucide="users" class="empty-state-icon"></i>
+                            <h3 class="empty-state-title">No Users Found</h3>
+                            <p class="empty-state-message">Start by adding your first user to the system</p>
+                            <button class="action-btn" id="btnAddUserEmpty">
+                                <i data-lucide="user-plus"></i>
+                                Add First User
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i data-lucide="user-plus" class="title-icon"></i>
+                    Add New User
+                </h3>
+                <button class="modal-close" id="closeAddUserModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form class="modal-form" id="addUserForm">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="user" class="label-icon"></i>
+                        Full Name
+                    </label>
+                    <input type="text" class="form-input" id="userName" required placeholder="Enter full name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="mail" class="label-icon"></i>
+                        Email
+                    </label>
+                    <input type="email" class="form-input" id="userEmail" required placeholder="Enter email address">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="phone" class="label-icon"></i>
+                        Contact Number
+                    </label>
+                    <input type="text" class="form-input" id="userContact" required placeholder="Enter contact number">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="shield" class="label-icon"></i>
+                        Role
+                    </label>
+                    <select class="form-input" id="userRole" required>
+                        <option value="">Select role</option>
+                        <option value="admin">Admin</option>
+                        <option value="worker">Worker</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="lock" class="label-icon"></i>
+                        Password
+                    </label>
+                    <input type="password" class="form-input" id="userPassword" required placeholder="Enter password">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="activity" class="label-icon"></i>
+                        Status
+                    </label>
+                    <select class="form-input" id="userStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="check"></i>
+                    Add User
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i data-lucide="edit" class="title-icon"></i>
+                    Edit User
+                </h3>
+                <button class="modal-close" id="closeEditUserModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form class="modal-form" id="editUserForm">
+                <input type="hidden" id="editUserId">
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="user" class="label-icon"></i>
+                        Full Name
+                    </label>
+                    <input type="text" class="form-input" id="editUserName" required placeholder="Enter full name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="mail" class="label-icon"></i>
+                        Email
+                    </label>
+                    <input type="email" class="form-input" id="editUserEmail" required placeholder="Enter email address">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="phone" class="label-icon"></i>
+                        Contact Number
+                    </label>
+                    <input type="text" class="form-input" id="editUserContact" required placeholder="Enter contact number">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="shield" class="label-icon"></i>
+                        Role
+                    </label>
+                    <select class="form-input" id="editUserRole" required>
+                        <option value="admin">Admin</option>
+                        <option value="worker">Worker</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="lock" class="label-icon"></i>
+                        Password (leave blank to keep current)
+                    </label>
+                    <input type="password" class="form-input" id="editUserPassword" placeholder="Enter new password">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i data-lucide="activity" class="label-icon"></i>
+                        Status
+                    </label>
+                    <select class="form-input" id="editUserStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="check"></i>
+                    Update User
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Centralized Services -->
+    <script src="../assets/js/notification-service.js"></script>
+    <script src="../assets/js/router-service.js"></script>
+    <script src="../assets/js/inventory-service.js"></script>
+    <!-- Main Application Logic -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/theme_toggle.js"></script>
+    <script src="../assets/js/pwa.js"></script>
+    <script>
+        (function() {
+            'use strict';
+            
+            console.log('Manage Users page script loaded');
+            
+            // Wait for components to load before initializing
+            function waitForComponents() {
+                const sidebar = document.getElementById('sidebar');
+                const topbar = document.querySelector('.topbar');
+                
+                if (sidebar && topbar) {
+                    console.log('Components loaded, initializing page');
+                    initializePage();
+                } else {
+                    console.log('Waiting for components...');
+                    setTimeout(waitForComponents, 200);
+                }
+            }
+            
+            function initializePage() {
+                // Check authentication
+                if (!AppData.user || !isLoggedIn()) {
+                    window.location.href = '../index.html';
+                    return;
+                }
+                
+                // Check if user is admin
+                if (AppData.user.role !== 'admin') {
+                    showToast('Access denied. Admin privileges required.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                    return;
+                }
+                
+                console.log('User authenticated, initializing user management');
+                
+                // Ensure current user is in the users list
+                ensureCurrentUserInList();
+                
+                // Load stats and users
+                loadUserStats();
+                loadUsersTable();
+                
+                // Initialize icons
+                if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                    lucide.createIcons();
+                }
+                
+                // Attach event listeners
+                attachEventListeners();
+            }
+            
+            function ensureCurrentUserInList() {
+                if (!AppData.users) {
+                    AppData.users = [];
+                }
+                
+                const currentUserExists = AppData.users.some(u => u.email === AppData.user.email);
+                
+                if (!currentUserExists) {
+                    console.log('Adding current user to users list');
+                    const currentUser = {
+                        id: AppData.user.id || generateId(),
+                        name: AppData.user.name,
+                        email: AppData.user.email,
+                        contact: AppData.user.contact || 'N/A',
+                        role: AppData.user.role || 'admin',
+                        password: AppData.user.password,
+                        status: 'active',
+                        createdAt: AppData.user.createdAt || new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    };
+                    
+                    AppData.users.push(currentUser);
+                    saveData();
+                }
+            }
+            
+            function attachEventListeners() {
+                console.log('Attaching event listeners');
+                
+                // Add User buttons
+                const btnAddUser = document.getElementById('btnAddUser');
+                if (btnAddUser) {
+                    btnAddUser.addEventListener('click', openAddUserModal);
+                    console.log('Add User button listener attached');
+                }
+                
+                const btnAddUserEmpty = document.getElementById('btnAddUserEmpty');
+                if (btnAddUserEmpty) {
+                    btnAddUserEmpty.addEventListener('click', openAddUserModal);
+                }
+                
+                // Close modal buttons
+                const closeAddBtn = document.getElementById('closeAddUserModal');
+                if (closeAddBtn) {
+                    closeAddBtn.addEventListener('click', closeAddUserModal);
+                }
+                
+                const closeEditBtn = document.getElementById('closeEditUserModal');
+                if (closeEditBtn) {
+                    closeEditBtn.addEventListener('click', closeEditUserModal);
+                }
+                
+                // Form submissions
+                const addUserForm = document.getElementById('addUserForm');
+                if (addUserForm) {
+                    addUserForm.addEventListener('submit', handleAddUser);
+                    console.log('Add User form listener attached');
+                }
+                
+                const editUserForm = document.getElementById('editUserForm');
+                if (editUserForm) {
+                    editUserForm.addEventListener('submit', handleEditUser);
+                }
+                
+                // Search and filters
+                const searchUsers = document.getElementById('searchUsers');
+                if (searchUsers) {
+                    searchUsers.addEventListener('input', () => {
+                        usersCurrentPage = 1;
+                        loadUsersTable();
+                    });
+                }
+                const filterRole = document.getElementById('filterRole');
+                if (filterRole) {
+                    filterRole.addEventListener('change', () => {
+                        usersCurrentPage = 1;
+                        loadUsersTable();
+                    });
+                }
+                const filterStatus = document.getElementById('filterStatus');
+                if (filterStatus) {
+                    filterStatus.addEventListener('change', () => {
+                        usersCurrentPage = 1;
+                        loadUsersTable();
+                    });
+                }
+                
+                // Close modals on backdrop click
+                const addModal = document.getElementById('addUserModal');
+                if (addModal) {
+                    addModal.addEventListener('click', function(e) {
+                        if (e.target === addModal) {
+                            closeAddUserModal();
+                        }
+                    });
+                }
+                
+                const editModal = document.getElementById('editUserModal');
+                if (editModal) {
+                    editModal.addEventListener('click', function(e) {
+                        if (e.target === editModal) {
+                            closeEditUserModal();
+                        }
+                    });
+                }
+            }
+            
+            // Start initialization immediately - no delay
+            setTimeout(waitForComponents, 100); // Reduced from 1000ms to 100ms
+            
+        })();
+    </script>
+</body>
+</html>
+>>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad

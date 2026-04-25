@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <header class="topbar">
     <div class="topbar-left">
         <button id="mobileSidebarToggle" class="mobile-sidebar-toggle">
@@ -69,3 +70,76 @@
         </div>
     </div>
 </header>
+=======
+<header class="topbar">
+    <div class="topbar-left">
+        <button id="mobileSidebarToggle" class="mobile-sidebar-toggle">
+            <i data-lucide="menu"></i>
+        </button>
+        <h1 class="page-title" id="pageTitle"></h1>
+    </div>
+    
+    <div class="topbar-right">
+        <button id="themeToggle" class="topbar-btn" title="Toggle theme">
+            <i data-lucide="sun" id="themeIcon"></i>
+        </button>
+        
+        <button id="notificationsBtn" class="topbar-btn notification-btn" title="Notifications">
+            <i data-lucide="bell"></i>
+            <span id="notificationBadge" class="notification-badge">0</span>
+        </button>
+        
+        <div class="topbar-divider"></div>
+        
+        <button id="profileBtn" class="profile-btn">
+            <img id="profileImage" src="" alt="Profile" class="profile-image" style="display: none;">
+            <div id="profilePlaceholder" class="profile-placeholder">
+                <i data-lucide="user"></i>
+            </div>
+            <span id="profileName" class="profile-name">User</span>
+            <i data-lucide="chevron-down" class="profile-chevron"></i>
+        </button>
+        
+        <!-- Profile Dropdown -->
+        <div id="profileDropdown" class="dropdown-menu">
+            <a href="profile.html" class="dropdown-item">
+                <i data-lucide="user" class="dropdown-icon"></i>
+                Profile
+            </a>
+            <a href="settings.html" class="dropdown-item">
+                <i data-lucide="settings" class="dropdown-icon"></i>
+                Settings
+            </a>
+            <div class="dropdown-divider"></div>
+            <button id="topbarLogout" class="dropdown-item" type="button">
+                <i data-lucide="log-out" class="dropdown-icon"></i>
+                Logout
+            </button>
+        </div>
+    </div>
+    
+    <!-- Notifications Panel -->
+    <div id="notificationsPanel" class="notifications-panel">
+        <div class="notifications-header">
+            <h3 class="notifications-title">
+                <i data-lucide="bell" class="title-icon"></i>
+                Notifications
+            </h3>
+            <div class="notifications-actions">
+                <button id="markAllReadBtn" class="notification-action-btn" title="Mark all as read">
+                    <i data-lucide="check-check"></i>
+                </button>
+                <button id="clearAllBtn" class="notification-action-btn" title="Clear all">
+                    <i data-lucide="trash-2"></i>
+                </button>
+                <button id="closeNotifications" class="close-btn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+        </div>
+        <div id="topbarNotificationsList" class="notifications-list">
+            <!-- Topbar notifications will be loaded here -->
+        </div>
+    </div>
+</header>
+>>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad
