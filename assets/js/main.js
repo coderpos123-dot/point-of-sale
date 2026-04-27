@@ -22,7 +22,7 @@ const AppData = {
     },
     notifications: [],
     settings: {
-        businessName: "International Dealers ZM",
+        businessName: "International Dealerz ZM",
         currency: "ZMW",
         theme: localStorage.getItem('theme') || 'dark',
         lowStockThreshold: 10
@@ -3206,9 +3206,9 @@ function showAbout() {
             modalTitle.innerHTML = '<i data-lucide="info" class="title-icon"></i>About';
             modalContent.innerHTML = `
                 <div style="text-align: center; margin-bottom: 30px;">
-                    <h3 style="color: var(--color-primary); margin-bottom: 15px;">International Dealers ZM POS System</h3>
+                    <h3 style="color: var(--color-primary); margin-bottom: 15px;">International Dealerz ZM POS System</h3>
                     <p style="color: var(--text-secondary); line-height: 1.6;">Version: 1.0.0</p>
-                    <p style="color: var(--text-secondary); line-height: 1.6;">© 2024 International Dealers ZM. All rights reserved.</p>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">© 2024 International Dealerz ZM. All rights reserved.</p>
                     <p style="color: var(--text-secondary); line-height: 1.6;">Professional Point of Sale System with offline support, inventory management, sales tracking, and comprehensive reporting.</p>
                 </div>
             `;

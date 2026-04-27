@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # International Dealers ZM - POS System
 
 Professional Point of Sale System with Node.js backend and offline support.
@@ -6,7 +5,7 @@ Professional Point of Sale System with Node.js backend and offline support.
 ## 🚀 Live Demo
 
 After deployment, your app will be available at:
-- **Production**: `https://internationaldealers.vercel.app` (or your custom domain)
+- **Production**: `https://internationaldealerzzm.com` (or your custom domain)
 - **Test Page**: `https://your-domain.vercel.app/test-vercel.html`
 
 ## ✨ Features
@@ -98,7 +97,7 @@ npm start
 
 3. **Custom Domain**
    - Go to Project Settings → Domains
-   - Add `internationaldealers.vercel.app` (or your preferred subdomain)
+   - Add `internationaldealerzzm.com` (or your preferred subdomain)
 
 For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
@@ -253,7 +252,6 @@ For issues and questions:
 ---
 
 Made with ❤️ by International Dealers ZM
-=======
 # International Dealers ZM - POS System
 
 Professional Point of Sale System with Node.js backend and offline support.
@@ -261,7 +259,7 @@ Professional Point of Sale System with Node.js backend and offline support.
 ## 🚀 Live Demo
 
 After deployment, your app will be available at:
-- **Production**: `https://internationaldealers.vercel.app` (or your custom domain)
+- **Production**: `https://internationaldealerzzm.com` (or your custom domain)
 - **Test Page**: `https://your-domain.vercel.app/test-vercel.html`
 
 ## ✨ Features
@@ -353,7 +351,7 @@ npm start
 
 3. **Custom Domain**
    - Go to Project Settings → Domains
-   - Add `internationaldealers.vercel.app` (or your preferred subdomain)
+   - Add `internationaldealerzzm.com` (or your preferred subdomain)
 
 For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
 
@@ -508,4 +506,3 @@ For issues and questions:
 ---
 
 Made with ❤️ by International Dealers ZM
->>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad

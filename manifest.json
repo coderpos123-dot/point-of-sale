@@ -1,7 +1,7 @@
 {
-  "name": "International Dealers ZM - POS System",
-  "short_name": "International Dealers ZM",
-  "description": "Complete Point of Sale System by International Dealers ZM with offline support",
+  "name": "International Dealerz ZM - POS System",
+  "short_name": "International Dealerz ZM",
+  "description": "Complete Point of Sale System by International Dealerz ZM with offline support",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

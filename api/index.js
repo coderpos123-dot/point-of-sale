@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -37,7 +36,7 @@ const defaultData = {
     profit: 0
   },
   settings: {
-    businessName: "International Dealers ZM",
+    businessName: "International Dealerz ZM",
     currency: "ZMW",
     theme: "light",
     lowStockThreshold: 10
@@ -74,7 +73,7 @@ let AppData = loadData();
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
-    message: 'International Dealers ZM POS System API is running',
+    message: 'International Dealerz ZM POS System API is running',
     timestamp: new Date().toISOString(),
     environment: 'vercel'
   });
@@ -473,7 +472,6 @@ app.post('/api/data/import', (req, res) => {
 });
 
 module.exports = app;
-=======
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -512,7 +510,7 @@ const defaultData = {
     profit: 0
   },
   settings: {
-    businessName: "International Dealers ZM",
+    businessName: "International Dealerz ZM",
     currency: "ZMW",
     theme: "light",
     lowStockThreshold: 10
@@ -549,7 +547,7 @@ let AppData = loadData();
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
-    message: 'International Dealers ZM POS System API is running',
+    message: 'International Dealerz ZM POS System API is running',
     timestamp: new Date().toISOString(),
     environment: 'vercel'
   });
@@ -948,4 +946,3 @@ app.post('/api/data/import', (req, res) => {
 });
 
 module.exports = app;
->>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad

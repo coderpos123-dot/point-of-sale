@@ -70,11 +70,11 @@ After deployment:
 2. Click on "Settings" → "Domains"
 3. Your project will have a default domain like: `your-project-name.vercel.app`
 4. To use a custom subdomain:
-   - Enter your desired subdomain (e.g., `internationaldealers`)
+   - Enter your desired subdomain (e.g., `internationaldealerzzm`)
    - If available, Vercel will configure it automatically
-   - Your app will be accessible at `internationaldealers.vercel.app`
+   - Your app will be accessible at `internationaldealerzzm.vercel.app`
 
-**Note**: If `internationaldealers.vercel.app` is taken, try alternatives:
+**Note**: If `internationaldealerzzm.vercel.app` is taken, try alternatives:
 - `international-dealers-zm.vercel.app`
 - `idz-pos-system.vercel.app`
 - `idz-pos.vercel.app`
@@ -317,11 +317,11 @@ After deployment:
 2. Click on "Settings" → "Domains"
 3. Your project will have a default domain like: `your-project-name.vercel.app`
 4. To use a custom subdomain:
-   - Enter your desired subdomain (e.g., `internationaldealers`)
+   - Enter your desired subdomain (e.g., `internationaldealerzzm`)
    - If available, Vercel will configure it automatically
-   - Your app will be accessible at `internationaldealers.vercel.app`
+   - Your app will be accessible at `internationaldealerzzm.vercel.app`
 
-**Note**: If `internationaldealers.vercel.app` is taken, try alternatives:
+**Note**: If `internationaldealerzzm.vercel.app` is taken, try alternatives:
 - `international-dealers-zm.vercel.app`
 - `idz-pos-system.vercel.app`
 - `idz-pos.vercel.app`
