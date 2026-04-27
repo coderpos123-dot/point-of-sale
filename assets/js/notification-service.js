@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // ==================== NOTIFICATION SERVICE ====================
 // Centralized notification management
 
@@ -147,7 +146,6 @@ if (document.readyState === 'loading') {
 } else {
     window.NotificationService.updateBadge();
 }
-=======
 // ==================== NOTIFICATION SERVICE ====================
 // Centralized notification management
 
@@ -296,4 +294,3 @@ if (document.readyState === 'loading') {
 } else {
     window.NotificationService.updateBadge();
 }
->>>>>>> 875c9d815bdb8f659903bb4f82207f9befaa87ad
